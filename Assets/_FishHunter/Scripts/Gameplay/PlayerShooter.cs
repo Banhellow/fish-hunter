@@ -9,10 +9,10 @@ namespace FishHunter.Gameplay
     [RequireComponent(typeof(PlayerAim))]
     public sealed class PlayerShooter : MonoBehaviour
     {
-        [SerializeField] private PlayerFish player;
-        [SerializeField] private PlayerAim aim;
-        [SerializeField] private Projectile projectilePrefab;
-        [SerializeField] private OneShotEffect muzzleEffectPrefab;
+        [SerializeField] private PlayerFish _player;
+        [SerializeField] private PlayerAim _aim;
+        [SerializeField] private Projectile _projectilePrefab;
+        [SerializeField] private OneShotEffect _muzzleEffectPrefab;
 
         private GameConfig _config;
         private InputService _input;
@@ -22,8 +22,8 @@ namespace FishHunter.Gameplay
 
         private void Start()
         {
-            if (player == null) player = GetComponent<PlayerFish>();
-            if (aim == null) aim = GetComponent<PlayerAim>();
+            if (_player == null) _player = GetComponent<PlayerFish>();
+            if (_aim == null) _aim = GetComponent<PlayerAim>();
             _config = ServiceLocator.Get<ConfigService>().Game;
             _input = ServiceLocator.Get<InputService>();
             _flow = ServiceLocator.Get<GameFlowService>();
@@ -38,26 +38,26 @@ namespace FishHunter.Gameplay
             if (_input.FireHeld && _cooldown <= 0f)
             {
                 Fire();
-                _cooldown = _config.fireCooldown;
+                _cooldown = _config.FireCooldown;
             }
         }
 
         public void Fire()
         {
-            Vector2 direction = aim.AimDirection;
-            Vector2 origin = player.NosePosition;
+            Vector2 direction = _aim.AimDirection;
+            Vector2 origin = _player.NosePosition;
 
-            Projectile projectile = _pool.Spawn(projectilePrefab, origin, Quaternion.identity);
-            projectile.Launch(direction, _config.projectileSpeed, _config.projectileLifetime);
+            Projectile projectile = _pool.Spawn(_projectilePrefab, origin, Quaternion.identity);
+            projectile.Launch(direction, _config.ProjectileSpeed, _config.ProjectileLifetime);
 
-            if (muzzleEffectPrefab != null && _config.muzzleFrames != null && _config.muzzleFrames.Length > 0)
+            if (_muzzleEffectPrefab != null && _config.MuzzleFrames != null && _config.MuzzleFrames.Length > 0)
             {
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                OneShotEffect muzzle = _pool.Spawn(muzzleEffectPrefab, origin, Quaternion.Euler(0f, 0f, angle));
-                muzzle.Play(_config.muzzleFrames, _config.muzzleFps, Color.white);
+                OneShotEffect muzzle = _pool.Spawn(_muzzleEffectPrefab, origin, Quaternion.Euler(0f, 0f, angle));
+                muzzle.Play(_config.MuzzleFrames, _config.MuzzleFps, Color.white);
             }
 
-            player.PlayShoot();
+            _player.PlayShoot();
         }
     }
 }

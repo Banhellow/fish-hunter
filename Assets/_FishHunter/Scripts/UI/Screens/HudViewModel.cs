@@ -12,8 +12,8 @@ namespace FishHunter.UI.Screens
 
         public HudViewModel()
         {
-            var score = ServiceLocator.Get<ScoreService>();
-            var lives = ServiceLocator.Get<LivesService>();
+            ScoreService score = ServiceLocator.Get<ScoreService>();
+            LivesService lives = ServiceLocator.Get<LivesService>();
 
             MaxLives = lives.MaxLives;
             Score.Value = score.Score;

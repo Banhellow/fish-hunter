@@ -26,14 +26,14 @@ namespace FishHunter.Enemies
         }
 
         public float RollSpeed(EnemyTypeConfig type, float speedMultiplier) =>
-            UnityEngine.Random.Range(type.speedMin, type.speedMax) * speedMultiplier;
+            UnityEngine.Random.Range(type.SpeedMin, type.SpeedMax) * speedMultiplier;
 
         public IEnemyMovementStrategy GetStrategy(EnemyMovementKind kind) => _strategies[kind];
 
         public Enemy Create(EnemyTypeConfig type, Vector2 position, float speed, Vector2 target, Action<Enemy, bool> onRemoved)
         {
             Enemy enemy = _pool.Spawn(_prefab, position, Quaternion.identity);
-            enemy.Init(type, speed, GetStrategy(type.movement), target, onRemoved);
+            enemy.Init(type, speed, GetStrategy(type.Movement), target, onRemoved);
             return enemy;
         }
     }

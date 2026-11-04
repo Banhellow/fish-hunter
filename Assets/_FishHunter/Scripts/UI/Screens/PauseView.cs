@@ -6,13 +6,13 @@ namespace FishHunter.UI.Screens
 {
     public sealed class PauseView : ViewBase<PauseViewModel>
     {
-        [SerializeField] private Button resumeButton;
-        [SerializeField] private Button menuButton;
+        [SerializeField] private Button _resumeButton;
+        [SerializeField] private Button _menuButton;
 
         protected override void OnBind(PauseViewModel viewModel)
         {
-            BindCommand(resumeButton, viewModel.Resume);
-            BindCommand(menuButton, viewModel.ReturnToMenu);
+            BindCommand(_resumeButton, viewModel.Resume);
+            BindCommand(_menuButton, viewModel.ReturnToMenu);
         }
     }
 }

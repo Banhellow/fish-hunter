@@ -14,11 +14,11 @@ namespace FishHunter.Enemies
     /// </summary>
     public sealed class EnemySpawner : MonoBehaviour, IService, IInitializable
     {
-        [SerializeField] private Enemy enemyPrefab;
-        [SerializeField] private OneShotEffect deathEffectPrefab;
-        [SerializeField] private EnemyTypeConfig[] enemyTypes;
+        [SerializeField] private Enemy _enemyPrefab;
+        [SerializeField] private OneShotEffect _deathEffectPrefab;
+        [SerializeField] private EnemyTypeConfig[] _enemyTypes;
 
-        private readonly List<Enemy> _active = new List<Enemy>();
+        private readonly List<Enemy> _active = new();
         private GameConfig _config;
         private DifficultyService _difficulty;
         private GameFlowService _flow;
@@ -29,7 +29,7 @@ namespace FishHunter.Enemies
         private float _spawnTimer;
 
         public IReadOnlyList<Enemy> ActiveEnemies => _active;
-        public IReadOnlyList<EnemyTypeConfig> EnemyTypes => enemyTypes;
+        public IReadOnlyList<EnemyTypeConfig> EnemyTypes => _enemyTypes;
 
         public void Initialize()
         {
@@ -39,7 +39,7 @@ namespace FishHunter.Enemies
             _score = ServiceLocator.Get<ScoreService>();
             _camera = ServiceLocator.Get<CameraService>();
             _pool = ServiceLocator.Get<PoolService>();
-            _factory = new EnemyFactory(enemyPrefab, _pool);
+            _factory = new EnemyFactory(_enemyPrefab, _pool);
             _flow.SessionReset += OnSessionReset;
             OnSessionReset();
         }
@@ -64,8 +64,8 @@ namespace FishHunter.Enemies
 
             if (TrySpawn())
             {
-                float jitter = 1f + Random.Range(-_config.spawnIntervalJitter, _config.spawnIntervalJitter);
-                _spawnTimer = Mathf.Max(_config.minSpawnGap, _difficulty.SpawnInterval * jitter);
+                float jitter = 1f + Random.Range(-_config.SpawnIntervalJitter, _config.SpawnIntervalJitter);
+                _spawnTimer = Mathf.Max(_config.MinSpawnGap, _difficulty.SpawnInterval * jitter);
             }
             else
             {
@@ -80,7 +80,7 @@ namespace FishHunter.Enemies
             if (type == null) return false;
 
             float speed = _factory.RollSpeed(type, _difficulty.SpeedMultiplier);
-            if (!TryFindSpawnPoint(speed, type.colliderRadius, out Vector2 position)) return false;
+            if (!TryFindSpawnPoint(speed, type.ColliderRadius, out Vector2 position)) return false;
 
             Enemy enemy = _factory.Create(type, position, speed, Vector2.zero, OnEnemyRemoved);
             _active.Add(enemy);
@@ -90,35 +90,34 @@ namespace FishHunter.Enemies
         private EnemyTypeConfig PickType()
         {
             float total = 0f;
-            foreach (var type in enemyTypes) total += _difficulty.GetSpawnWeight(type);
+            foreach (EnemyTypeConfig type in _enemyTypes) total += _difficulty.GetSpawnWeight(type);
             if (total <= 0f) return null;
 
             float roll = Random.value * total;
-            foreach (var type in enemyTypes)
+            foreach (EnemyTypeConfig type in _enemyTypes)
             {
                 roll -= _difficulty.GetSpawnWeight(type);
                 if (roll <= 0f) return type;
             }
 
-            return enemyTypes[enemyTypes.Length - 1];
+            return _enemyTypes[_enemyTypes.Length - 1];
         }
 
         private bool TryFindSpawnPoint(float speed, float radius, out Vector2 position)
         {
             Vector2 half = _camera.HalfExtents;
-            float offset = _config.spawnMargin + radius;
+            float offset = _config.SpawnMargin + radius;
 
-            for (int attempt = 0; attempt < _config.spawnAttempts; attempt++)
+            for (int attempt = 0; attempt < _config.SpawnAttempts; attempt++)
             {
                 int side = Random.Range(0, 4);
-                switch (side)
+                position = side switch
                 {
-                    case 0: position = new Vector2(Random.Range(-half.x, half.x), half.y + offset); break;   // top
-                    case 1: position = new Vector2(Random.Range(-half.x, half.x), -half.y - offset); break;  // bottom
-                    case 2: position = new Vector2(-half.x - offset, Random.Range(-half.y, half.y)); break;  // left
-                    default: position = new Vector2(half.x + offset, Random.Range(-half.y, half.y)); break;  // right
-                }
-
+                    0 => new Vector2(Random.Range(-half.x, half.x), half.y + offset),
+                    1 => new Vector2(Random.Range(-half.x, half.x), -half.y - offset),
+                    2 => new Vector2(-half.x - offset, Random.Range(-half.y, half.y)),
+                    _ => new Vector2(half.x + offset, Random.Range(-half.y, half.y)),
+                };
                 if (IsFree(position, speed)) return true;
             }
 
@@ -128,10 +127,10 @@ namespace FishHunter.Enemies
 
         private bool IsFree(Vector2 candidate, float speed)
         {
-            float minSpacingSqr = _config.minSpawnSpacing * _config.minSpawnSpacing;
+            float minSpacingSqr = _config.MinSpawnSpacing * _config.MinSpawnSpacing;
             float candidateAngle = Mathf.Atan2(candidate.y, candidate.x) * Mathf.Rad2Deg;
 
-            foreach (var enemy in _active)
+            foreach (Enemy enemy in _active)
             {
                 if (!enemy.IsAlive) continue;
                 Vector2 other = enemy.Position;
@@ -140,7 +139,7 @@ namespace FishHunter.Enemies
                 // Same approach lane: whichever fish is further out must not be faster than the one ahead,
                 // otherwise it would catch up and swim through it.
                 float otherAngle = Mathf.Atan2(other.y, other.x) * Mathf.Rad2Deg;
-                if (Mathf.Abs(Mathf.DeltaAngle(candidateAngle, otherAngle)) >= _config.laneAngle) continue;
+                if (Mathf.Abs(Mathf.DeltaAngle(candidateAngle, otherAngle)) >= _config.LaneAngle) continue;
 
                 bool candidateIsOuter = candidate.sqrMagnitude > other.sqrMagnitude;
                 float outerSpeed = candidateIsOuter ? speed : enemy.Speed;
@@ -154,12 +153,12 @@ namespace FishHunter.Enemies
         private void OnEnemyRemoved(Enemy enemy, bool killedByPlayer)
         {
             _active.Remove(enemy);
-            if (killedByPlayer) _score.Add(enemy.Type.points);
+            if (killedByPlayer) _score.Add(enemy.Type.Points);
 
-            if (deathEffectPrefab != null && enemy.Type.deathFrames != null && enemy.Type.deathFrames.Length > 0)
+            if (_deathEffectPrefab != null && enemy.Type.DeathFrames != null && enemy.Type.DeathFrames.Length > 0)
             {
-                OneShotEffect effect = _pool.Spawn(deathEffectPrefab, enemy.Position, Quaternion.identity);
-                effect.Play(enemy.Type.deathFrames, enemy.Type.deathFps, Color.white);
+                OneShotEffect effect = _pool.Spawn(_deathEffectPrefab, enemy.Position, Quaternion.identity);
+                effect.Play(enemy.Type.DeathFrames, enemy.Type.DeathFps, Color.white);
             }
 
             _pool.Despawn(enemy);

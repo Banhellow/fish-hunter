@@ -20,21 +20,21 @@ namespace FishHunter.EditorTools
 
         private struct ImportJob
         {
-            public string path;
-            public int ppu;
-            public Vector4 border;
-            public bool isFont;
+            public string Path;
+            public int Ppu;
+            public Vector4 Border;
+            public bool IsFont;
         }
 
-        private static readonly List<ImportJob> Jobs = new List<ImportJob>();
+        private static readonly List<ImportJob> _jobs = new();
 
         [MenuItem("Fish Hunter/Generate Art", priority = 0)]
         public static void Generate()
         {
-            Jobs.Clear();
+            _jobs.Clear();
 
             // Player
-            var player = FishPainter.Player;
+            FishStyle player = FishPainter.Player;
             for (int f = 0; f < 4; f++)
                 Save(FishPainter.Paint(player, f / 4f), "Player", $"Player_Idle_{f}", WorldPpu);
             float[] mouth = { 0.6f, 1f, 0.7f, 0.25f };
@@ -49,19 +49,19 @@ namespace FishHunter.EditorTools
                 { "EnemyB", FishPainter.EnemyB },
                 { "EnemyC", FishPainter.EnemyC }
             };
-            foreach (var pair in styles)
+            foreach (KeyValuePair<string, FishStyle> pair in styles)
             {
                 for (int f = 0; f < 4; f++)
                     Save(FishPainter.Paint(pair.Value, f / 4f), "Enemies", $"{pair.Key}_Swim_{f}", WorldPpu);
-                var death = EffectPainter.Death(pair.Value);
+                PixelCanvas[] death = EffectPainter.Death(pair.Value);
                 for (int f = 0; f < death.Length; f++)
                     Save(death[f], "Effects", $"{pair.Key}_Death_{f}", WorldPpu);
             }
 
             // Projectile + muzzle
-            var projectile = EffectPainter.Projectile();
+            PixelCanvas[] projectile = EffectPainter.Projectile();
             for (int f = 0; f < projectile.Length; f++) Save(projectile[f], "Effects", $"Projectile_{f}", WorldPpu);
-            var muzzle = EffectPainter.Muzzle();
+            PixelCanvas[] muzzle = EffectPainter.Muzzle();
             for (int f = 0; f < muzzle.Length; f++) Save(muzzle[f], "Effects", $"Muzzle_{f}", WorldPpu);
 
             // Background
@@ -86,11 +86,11 @@ namespace FishHunter.EditorTools
             Save(UiPainter.FontAtlas(characters), "Font", "PixelFont", UiPpu, default, true);
 
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
-            foreach (var job in Jobs) ConfigureImporter(job);
+            foreach (ImportJob job in _jobs) ConfigureImporter(job);
 
             CreateFontAsset(characters);
             AssetDatabase.SaveAssets();
-            Debug.Log($"[FishHunter] Generated {Jobs.Count} pixel-art textures.");
+            Debug.Log($"[FishHunter] Generated {_jobs.Count} pixel-art textures.");
         }
 
         private static void Save(PixelCanvas canvas, string folder, string name, int ppu, Vector4 border = default, bool isFont = false)
@@ -101,7 +101,7 @@ namespace FishHunter.EditorTools
             Texture2D texture = canvas.ToTexture();
             File.WriteAllBytes(path, texture.EncodeToPNG());
             Object.DestroyImmediate(texture);
-            Jobs.Add(new ImportJob { path = path, ppu = ppu, border = border, isFont = isFont });
+            _jobs.Add(new ImportJob { Path = path, Ppu = ppu, Border = border, IsFont = isFont });
         }
 
         /// <summary>Removes numbered frames beyond the current count (e.g. after lowering a frame count).</summary>
@@ -119,19 +119,19 @@ namespace FishHunter.EditorTools
 
         private static void ConfigureImporter(ImportJob job)
         {
-            var importer = (TextureImporter)AssetImporter.GetAtPath(job.path);
+            var importer = (TextureImporter)AssetImporter.GetAtPath(job.Path);
             if (importer == null)
             {
-                Debug.LogError($"[FishHunter] Missing importer for {job.path}");
+                Debug.LogError($"[FishHunter] Missing importer for {job.Path}");
                 return;
             }
 
-            importer.textureType = job.isFont ? TextureImporterType.Default : TextureImporterType.Sprite;
-            if (!job.isFont)
+            importer.textureType = job.IsFont ? TextureImporterType.Default : TextureImporterType.Sprite;
+            if (!job.IsFont)
             {
                 importer.spriteImportMode = SpriteImportMode.Single;
-                importer.spritePixelsPerUnit = job.ppu;
-                importer.spriteBorder = job.border;
+                importer.spritePixelsPerUnit = job.Ppu;
+                importer.spriteBorder = job.Border;
                 var settings = new TextureImporterSettings();
                 importer.ReadTextureSettings(settings);
                 settings.spriteMeshType = SpriteMeshType.FullRect;
@@ -151,23 +151,23 @@ namespace FishHunter.EditorTools
 
         private static void CreateFontAsset(string characters)
         {
-            var texture = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Root}/Font/PixelFont.png");
+            Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Root}/Font/PixelFont.png");
             Directory.CreateDirectory(Path.GetDirectoryName(FontAssetPath));
-            var font = AssetDatabase.LoadAssetAtPath<PixelFont>(FontAssetPath);
+            PixelFont font = AssetDatabase.LoadAssetAtPath<PixelFont>(FontAssetPath);
             if (font == null)
             {
                 font = ScriptableObject.CreateInstance<PixelFont>();
                 AssetDatabase.CreateAsset(font, FontAssetPath);
             }
 
-            font.texture = texture;
-            font.characters = characters;
-            font.columns = UiPainter.FontColumns;
-            font.cellWidth = UiPainter.FontCellW;
-            font.cellHeight = UiPainter.FontCellH;
-            font.glyphWidth = PixelFontGlyphs.GlyphWidth;
-            font.glyphHeight = PixelFontGlyphs.GlyphHeight;
-            font.letterSpacing = 1;
+            font.Texture = texture;
+            font.Characters = characters;
+            font.Columns = UiPainter.FontColumns;
+            font.CellWidth = UiPainter.FontCellW;
+            font.CellHeight = UiPainter.FontCellH;
+            font.GlyphWidth = PixelFontGlyphs.GlyphWidth;
+            font.GlyphHeight = PixelFontGlyphs.GlyphHeight;
+            font.LetterSpacing = 1;
             EditorUtility.SetDirty(font);
         }
 
@@ -175,7 +175,7 @@ namespace FishHunter.EditorTools
 
         public static Sprite LoadSprite(string folder, string name)
         {
-            var sprite = AssetDatabase.LoadAssetAtPath<Sprite>($"{Root}/{folder}/{name}.png");
+            Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>($"{Root}/{folder}/{name}.png");
             if (sprite == null) throw new FileNotFoundException($"Sprite {folder}/{name} not found. Run Fish Hunter/Generate Art first.");
             return sprite;
         }

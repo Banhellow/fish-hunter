@@ -7,25 +7,25 @@ namespace FishHunter.UI.Screens
     /// <summary>Top-left HUD: score counter and three hearts (lost hearts are dimmed).</summary>
     public sealed class HudView : ViewBase<HudViewModel>
     {
-        [SerializeField] private PixelText scoreText;
-        [SerializeField] private Image[] hearts;
-        [SerializeField] private Sprite heartFull;
-        [SerializeField] private Sprite heartEmpty;
-        [SerializeField] private Color dimmedColor = new Color(1f, 1f, 1f, 0.55f);
+        [SerializeField] private PixelText _scoreText;
+        [SerializeField] private Image[] _hearts;
+        [SerializeField] private Sprite _heartFull;
+        [SerializeField] private Sprite _heartEmpty;
+        [SerializeField] private Color _dimmedColor = new(1f, 1f, 1f, 0.55f);
 
         protected override void OnBind(HudViewModel viewModel)
         {
-            BindProperty(viewModel.Score, score => scoreText.Text = $"SCORE: {score}");
+            BindProperty(viewModel.Score, score => _scoreText.Text = $"SCORE: {score}");
             BindProperty(viewModel.Lives, UpdateHearts);
         }
 
         private void UpdateHearts(int lives)
         {
-            for (int i = 0; i < hearts.Length; i++)
+            for (int i = 0; i < _hearts.Length; i++)
             {
                 bool alive = i < lives;
-                hearts[i].sprite = alive ? heartFull : heartEmpty;
-                hearts[i].color = alive ? Color.white : dimmedColor;
+                _hearts[i].sprite = alive ? _heartFull : _heartEmpty;
+                _hearts[i].color = alive ? Color.white : _dimmedColor;
             }
         }
     }

@@ -12,10 +12,10 @@ namespace FishHunter.Gameplay
     /// </summary>
     public sealed class PlayerFish : MonoBehaviour, IService, IInitializable
     {
-        [SerializeField] private Transform visual;
-        [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private SpriteFrameAnimator animator;
-        [SerializeField] private Color hitColor = new Color(1f, 0.35f, 0.35f, 1f);
+        [SerializeField] private Transform _visual;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
+        [SerializeField] private SpriteFrameAnimator _animator;
+        [SerializeField] private Color _hitColor = new(1f, 0.35f, 0.35f, 1f);
 
         private GameConfig _config;
         private GameFlowService _flow;
@@ -23,8 +23,8 @@ namespace FishHunter.Gameplay
         private float _flashTimer;
 
         public Vector2 Position => transform.position;
-        public Vector2 Facing => visual.right;
-        public Vector2 NosePosition => (Vector2)transform.position + Facing * _config.noseOffset;
+        public Vector2 Facing => _visual.right;
+        public Vector2 NosePosition => (Vector2)transform.position + Facing * _config.NoseOffset;
 
         public void Initialize()
         {
@@ -43,25 +43,25 @@ namespace FishHunter.Gameplay
         public void SetFacing(Vector2 direction)
         {
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            visual.rotation = Quaternion.Euler(0f, 0f, angle);
+            _visual.rotation = Quaternion.Euler(0f, 0f, angle);
             // Keep the fish upright when it faces left.
-            spriteRenderer.flipY = direction.x < 0f;
+            _spriteRenderer.flipY = direction.x < 0f;
         }
 
         public void PlayShoot()
         {
-            animator.Play(_config.playerShootFrames, _config.playerShootFps, false, PlayIdle);
+            _animator.Play(_config.PlayerShootFrames, _config.PlayerShootFps, false, PlayIdle);
         }
 
         private void PlayIdle()
         {
-            animator.Play(_config.playerIdleFrames, _config.playerIdleFps, true);
+            _animator.Play(_config.PlayerIdleFrames, _config.PlayerIdleFps, true);
         }
 
         private void ResetFish()
         {
             _flashTimer = 0f;
-            spriteRenderer.color = Color.white;
+            _spriteRenderer.color = Color.white;
             SetFacing(Vector2.right);
             PlayIdle();
         }
@@ -71,7 +71,7 @@ namespace FishHunter.Gameplay
             if (_flashTimer <= 0f) return;
             _flashTimer -= Time.deltaTime;
             bool flashOn = _flashTimer > 0f && Mathf.FloorToInt(_flashTimer * 16f) % 2 == 0;
-            spriteRenderer.color = flashOn ? hitColor : Color.white;
+            _spriteRenderer.color = flashOn ? _hitColor : Color.white;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -80,7 +80,7 @@ namespace FishHunter.Gameplay
             if (!other.TryGetComponent(out Enemy enemy) || !enemy.IsAlive) return;
 
             enemy.Kill(false);
-            _flashTimer = _config.hitFlashDuration;
+            _flashTimer = _config.HitFlashDuration;
             _lives.LoseLife();
         }
     }

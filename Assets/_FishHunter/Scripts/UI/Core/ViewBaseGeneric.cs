@@ -11,7 +11,7 @@ namespace FishHunter.UI.Core
     /// </summary>
     public abstract class ViewBase<TViewModel> : ViewBase where TViewModel : ViewModelBase
     {
-        private readonly List<IDisposable> _bindings = new List<IDisposable>();
+        private readonly List<IDisposable> _bindings = new();
 
         protected TViewModel ViewModel { get; private set; }
 
@@ -36,14 +36,15 @@ namespace FishHunter.UI.Core
 
         protected void BindCommand(Button button, Action command)
         {
-            UnityAction action = () => command();
-            button.onClick.AddListener(action);
-            _bindings.Add(new DisposableAction(() => button.onClick.RemoveListener(action)));
+            // UnityEvent removes listeners by target + method, so both conversions of OnClick match.
+            void OnClick() => command();
+            button.onClick.AddListener(OnClick);
+            _bindings.Add(new DisposableAction(() => button.onClick.RemoveListener(OnClick)));
         }
 
         private void Unbind()
         {
-            foreach (var binding in _bindings) binding.Dispose();
+            foreach (IDisposable binding in _bindings) binding.Dispose();
             _bindings.Clear();
             ViewModel?.Dispose();
             ViewModel = null;

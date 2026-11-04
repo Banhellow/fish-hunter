@@ -10,56 +10,54 @@ namespace FishHunter.Animation
     [RequireComponent(typeof(SpriteRenderer))]
     public sealed class SpriteFrameAnimator : MonoBehaviour
     {
-        [SerializeField] private SpriteRenderer target;
-        [SerializeField] private Sprite[] frames;
-        [SerializeField] private float framesPerSecond = 8f;
-        [SerializeField] private bool loop = true;
-        [SerializeField] private bool playOnEnable = true;
-        [SerializeField] private bool randomStartFrame;
+        [SerializeField] private SpriteRenderer _target;
+        [SerializeField] private Sprite[] _frames;
+        [SerializeField] private float _framesPerSecond = 8f;
+        [SerializeField] private bool _loop = true;
+        [SerializeField] private bool _playOnEnable = true;
+        [SerializeField] private bool _randomStartFrame;
 
         private float _timer;
         private int _index;
-        private bool _playing;
         private Action _onComplete;
 
-        public bool IsPlaying => _playing;
-        public Sprite[] Frames => frames;
+        public bool IsPlaying { get; private set; }
 
         private void Awake()
         {
-            if (target == null) target = GetComponent<SpriteRenderer>();
+            if (_target == null) _target = GetComponent<SpriteRenderer>();
         }
 
         private void OnEnable()
         {
-            if (playOnEnable && frames != null && frames.Length > 0)
-                Play(frames, framesPerSecond, loop, null, randomStartFrame);
+            if (_playOnEnable && _frames != null && _frames.Length > 0)
+                Play(_frames, _framesPerSecond, _loop, null, _randomStartFrame);
         }
 
         public void Play(Sprite[] newFrames, float fps, bool shouldLoop, Action onComplete = null, bool randomStart = false)
         {
-            frames = newFrames;
-            framesPerSecond = Mathf.Max(0.01f, fps);
-            loop = shouldLoop;
+            _frames = newFrames;
+            _framesPerSecond = Mathf.Max(0.01f, fps);
+            _loop = shouldLoop;
             _onComplete = onComplete;
             _timer = 0f;
-            _index = randomStart && frames != null && frames.Length > 0 ? UnityEngine.Random.Range(0, frames.Length) : 0;
-            _playing = frames != null && frames.Length > 0;
-            if (_playing) target.sprite = frames[_index];
+            _index = randomStart && _frames != null && _frames.Length > 0 ? UnityEngine.Random.Range(0, _frames.Length) : 0;
+            IsPlaying = _frames != null && _frames.Length > 0;
+            if (IsPlaying) _target.sprite = _frames[_index];
         }
 
         public void Stop()
         {
-            _playing = false;
+            IsPlaying = false;
             _onComplete = null;
         }
 
         private void Update()
         {
-            if (!_playing) return;
+            if (!IsPlaying) return;
 
             _timer += Time.deltaTime;
-            float frameDuration = 1f / framesPerSecond;
+            float frameDuration = 1f / _framesPerSecond;
             bool changed = false;
 
             while (_timer >= frameDuration)
@@ -68,24 +66,24 @@ namespace FishHunter.Animation
                 _index++;
                 changed = true;
 
-                if (_index < frames.Length) continue;
+                if (_index < _frames.Length) continue;
 
-                if (loop)
+                if (_loop)
                 {
                     _index = 0;
                     continue;
                 }
 
-                _index = frames.Length - 1;
-                _playing = false;
-                target.sprite = frames[_index];
-                var callback = _onComplete;
+                _index = _frames.Length - 1;
+                IsPlaying = false;
+                _target.sprite = _frames[_index];
+                Action callback = _onComplete;
                 _onComplete = null;
                 callback?.Invoke();
                 return;
             }
 
-            if (changed) target.sprite = frames[_index];
+            if (changed) _target.sprite = _frames[_index];
         }
     }
 }

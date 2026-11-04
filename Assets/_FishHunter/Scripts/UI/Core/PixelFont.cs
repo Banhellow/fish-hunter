@@ -6,35 +6,35 @@ namespace FishHunter.UI.Core
     [CreateAssetMenu(menuName = "Fish Hunter/Pixel Font", fileName = "PixelFont")]
     public sealed class PixelFont : ScriptableObject
     {
-        public Texture2D texture;
+        public Texture2D Texture;
         [Tooltip("Characters in atlas order (row-major, starting top-left).")]
-        public string characters;
-        public int columns = 16;
-        public int cellWidth = 6;
-        public int cellHeight = 8;
-        public int glyphWidth = 5;
-        public int glyphHeight = 7;
-        public int letterSpacing = 1;
+        public string Characters;
+        public int Columns = 16;
+        public int CellWidth = 6;
+        public int CellHeight = 8;
+        public int GlyphWidth = 5;
+        public int GlyphHeight = 7;
+        public int LetterSpacing = 1;
 
-        public int IndexOf(char c) => characters.IndexOf(char.ToUpperInvariant(c));
+        public int IndexOf(char c) => Characters.IndexOf(char.ToUpperInvariant(c));
 
         /// <summary>UV rect of a glyph in the atlas.</summary>
         public Rect GetUv(int index)
         {
-            int col = index % columns;
-            int row = index / columns;
-            float w = texture.width;
-            float h = texture.height;
-            float x = col * cellWidth;
-            float yTop = row * cellHeight;
-            return new Rect(x / w, (h - yTop - glyphHeight) / h, glyphWidth / w, glyphHeight / h);
+            int col = index % Columns;
+            int row = index / Columns;
+            float w = Texture.width;
+            float h = Texture.height;
+            float x = col * CellWidth;
+            float yTop = row * CellHeight;
+            return new Rect(x / w, (h - yTop - GlyphHeight) / h, GlyphWidth / w, GlyphHeight / h);
         }
 
         /// <summary>Width of a string in font pixels.</summary>
         public int MeasureWidth(string text)
         {
             if (string.IsNullOrEmpty(text)) return 0;
-            return text.Length * (glyphWidth + letterSpacing) - letterSpacing;
+            return text.Length * (GlyphWidth + LetterSpacing) - LetterSpacing;
         }
     }
 }

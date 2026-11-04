@@ -8,8 +8,8 @@ namespace FishHunter.Gameplay
     public sealed class PoolService : IService
     {
         private readonly Transform _root;
-        private readonly Dictionary<Component, IObjectPool> _poolsByPrefab = new Dictionary<Component, IObjectPool>();
-        private readonly Dictionary<Component, IObjectPool> _poolsByInstance = new Dictionary<Component, IObjectPool>();
+        private readonly Dictionary<Component, IObjectPool> _poolsByPrefab = new();
+        private readonly Dictionary<Component, IObjectPool> _poolsByInstance = new();
 
         public PoolService(Transform root)
         {
@@ -18,7 +18,7 @@ namespace FishHunter.Gameplay
 
         public T Spawn<T>(T prefab, Vector3 position, Quaternion rotation) where T : Component
         {
-            if (!_poolsByPrefab.TryGetValue(prefab, out var pool))
+            if (!_poolsByPrefab.TryGetValue(prefab, out IObjectPool pool))
             {
                 pool = new ObjectPool<T>(prefab, _root);
                 _poolsByPrefab[prefab] = pool;
@@ -32,13 +32,13 @@ namespace FishHunter.Gameplay
         public void Despawn(Component instance)
         {
             if (instance == null) return;
-            if (_poolsByInstance.TryGetValue(instance, out var pool)) pool.Release(instance);
+            if (_poolsByInstance.TryGetValue(instance, out IObjectPool pool)) pool.Release(instance);
             else Object.Destroy(instance.gameObject);
         }
 
         public void DespawnAll()
         {
-            foreach (var pool in _poolsByPrefab.Values) pool.ReleaseAll();
+            foreach (IObjectPool pool in _poolsByPrefab.Values) pool.ReleaseAll();
         }
     }
 }

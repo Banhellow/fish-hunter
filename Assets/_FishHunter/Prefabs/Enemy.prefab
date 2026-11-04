@@ -107,12 +107,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 348e5e8658b9d0d4ba68dc688fa5a039, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishHunter.Animation.SpriteFrameAnimator
-  target: {fileID: 7567700709537891932}
-  frames: []
-  framesPerSecond: 8
-  loop: 1
-  playOnEnable: 0
-  randomStartFrame: 0
+  _target: {fileID: 7567700709537891932}
+  _frames: []
+  _framesPerSecond: 8
+  _loop: 1
+  _playOnEnable: 0
+  _randomStartFrame: 0
 --- !u!50 &7048108732004895567
 Rigidbody2D:
   serializedVersion: 5
@@ -188,6 +188,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcdb1fc64e0258b41a520d24b20cd44c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishHunter.Enemies.Enemy
-  spriteRenderer: {fileID: 7567700709537891932}
-  animator: {fileID: 3267987006389506742}
-  bodyCollider: {fileID: 7033299863686764433}
+  _spriteRenderer: {fileID: 7567700709537891932}
+  _animator: {fileID: 3267987006389506742}
+  _bodyCollider: {fileID: 7033299863686764433}

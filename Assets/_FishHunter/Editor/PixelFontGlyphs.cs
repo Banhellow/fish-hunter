@@ -9,7 +9,7 @@ namespace FishHunter.EditorTools
         public const int GlyphHeight = 7;
 
         // Rows top-to-bottom, '#' = ink.
-        public static readonly Dictionary<char, string[]> Glyphs = new Dictionary<char, string[]>
+        public static readonly Dictionary<char, string[]> Glyphs = new()
         {
             ['A'] = new[] { ".###.", "#...#", "#...#", "#####", "#...#", "#...#", "#...#" },
             ['B'] = new[] { "####.", "#...#", "#...#", "####.", "#...#", "#...#", "####." },
@@ -64,14 +64,14 @@ namespace FishHunter.EditorTools
             get
             {
                 var chars = new System.Text.StringBuilder();
-                foreach (var key in Glyphs.Keys) chars.Append(key);
+                foreach (char key in Glyphs.Keys) chars.Append(key);
                 return chars.ToString();
             }
         }
 
         public static bool Ink(char c, int x, int rowFromTop)
         {
-            if (!Glyphs.TryGetValue(char.ToUpperInvariant(c), out var rows)) return false;
+            if (!Glyphs.TryGetValue(char.ToUpperInvariant(c), out string[] rows)) return false;
             return rows[rowFromTop][x] == '#';
         }
     }

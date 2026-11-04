@@ -9,7 +9,7 @@ namespace FishHunter.EditorTools
         public readonly int Height;
         private readonly Color32[] _pixels;
 
-        public static readonly Color32 Clear = new Color32(0, 0, 0, 0);
+        public static readonly Color32 Clear = new(0, 0, 0, 0);
 
         public PixelCanvas(int width, int height)
         {
@@ -49,40 +49,40 @@ namespace FishHunter.EditorTools
         public void FillRect(int x, int y, int w, int h, Color32 c)
         {
             for (int yy = y; yy < y + h; yy++)
-            for (int xx = x; xx < x + w; xx++)
-                Set(xx, yy, c);
+                for (int xx = x; xx < x + w; xx++)
+                    Set(xx, yy, c);
         }
 
         public void FillCircle(float cx, float cy, float r, Color32 c)
         {
             for (int y = Mathf.FloorToInt(cy - r); y <= Mathf.CeilToInt(cy + r); y++)
-            for (int x = Mathf.FloorToInt(cx - r); x <= Mathf.CeilToInt(cx + r); x++)
-            {
-                float dx = x - cx, dy = y - cy;
-                if (dx * dx + dy * dy <= r * r + 0.25f) Set(x, y, c);
-            }
+                for (int x = Mathf.FloorToInt(cx - r); x <= Mathf.CeilToInt(cx + r); x++)
+                {
+                    float dx = x - cx, dy = y - cy;
+                    if (dx * dx + dy * dy <= r * r + 0.25f) Set(x, y, c);
+                }
         }
 
         public void Ring(float cx, float cy, float r, float thickness, Color32 c)
         {
             float inner = Mathf.Max(0f, r - thickness);
             for (int y = Mathf.FloorToInt(cy - r - 1); y <= Mathf.CeilToInt(cy + r + 1); y++)
-            for (int x = Mathf.FloorToInt(cx - r - 1); x <= Mathf.CeilToInt(cx + r + 1); x++)
-            {
-                float dx = x - cx, dy = y - cy;
-                float d = Mathf.Sqrt(dx * dx + dy * dy);
-                if (d <= r + 0.5f && d > inner - 0.5f) Set(x, y, c);
-            }
+                for (int x = Mathf.FloorToInt(cx - r - 1); x <= Mathf.CeilToInt(cx + r + 1); x++)
+                {
+                    float dx = x - cx, dy = y - cy;
+                    float d = Mathf.Sqrt(dx * dx + dy * dy);
+                    if (d <= r + 0.5f && d > inner - 0.5f) Set(x, y, c);
+                }
         }
 
         public void FillEllipse(float cx, float cy, float rx, float ry, Color32 c)
         {
             for (int y = Mathf.FloorToInt(cy - ry); y <= Mathf.CeilToInt(cy + ry); y++)
-            for (int x = Mathf.FloorToInt(cx - rx); x <= Mathf.CeilToInt(cx + rx); x++)
-            {
-                float nx = (x - cx) / rx, ny = (y - cy) / ry;
-                if (nx * nx + ny * ny <= 1.0f) Set(x, y, c);
-            }
+                for (int x = Mathf.FloorToInt(cx - rx); x <= Mathf.CeilToInt(cx + rx); x++)
+                {
+                    float nx = (x - cx) / rx, ny = (y - cy) / ry;
+                    if (nx * nx + ny * ny <= 1.0f) Set(x, y, c);
+                }
         }
 
         public void Line(int x0, int y0, int x1, int y1, Color32 c)
@@ -107,22 +107,22 @@ namespace FishHunter.EditorTools
             bool Opaque(int x, int y) => x >= 0 && y >= 0 && x < Width && y < Height && copy[y * Width + x].a > 0;
 
             for (int y = 0; y < Height; y++)
-            for (int x = 0; x < Width; x++)
-            {
-                if (copy[y * Width + x].a > 0) continue;
-                bool edge = Opaque(x - 1, y) || Opaque(x + 1, y) || Opaque(x, y - 1) || Opaque(x, y + 1);
-                if (!edge && diagonals)
-                    edge = Opaque(x - 1, y - 1) || Opaque(x + 1, y - 1) || Opaque(x - 1, y + 1) || Opaque(x + 1, y + 1);
-                if (edge) _pixels[y * Width + x] = c;
-            }
+                for (int x = 0; x < Width; x++)
+                {
+                    if (copy[y * Width + x].a > 0) continue;
+                    bool edge = Opaque(x - 1, y) || Opaque(x + 1, y) || Opaque(x, y - 1) || Opaque(x, y + 1);
+                    if (!edge && diagonals)
+                        edge = Opaque(x - 1, y - 1) || Opaque(x + 1, y - 1) || Opaque(x - 1, y + 1) || Opaque(x + 1, y + 1);
+                    if (edge) _pixels[y * Width + x] = c;
+                }
         }
 
         public PixelCanvas FlipX()
         {
             var result = new PixelCanvas(Width, Height);
             for (int y = 0; y < Height; y++)
-            for (int x = 0; x < Width; x++)
-                result.Set(Width - 1 - x, y, Get(x, y));
+                for (int x = 0; x < Width; x++)
+                    result.Set(Width - 1 - x, y, Get(x, y));
             return result;
         }
 
@@ -130,11 +130,11 @@ namespace FishHunter.EditorTools
         public void Stamp(PixelCanvas other, int ox, int oy)
         {
             for (int y = 0; y < other.Height; y++)
-            for (int x = 0; x < other.Width; x++)
-            {
-                Color32 c = other.Get(x, y);
-                if (c.a > 0) Blend(ox + x, oy + y, c);
-            }
+                for (int x = 0; x < other.Width; x++)
+                {
+                    Color32 c = other.Get(x, y);
+                    if (c.a > 0) Blend(ox + x, oy + y, c);
+                }
         }
 
         public Texture2D ToTexture()

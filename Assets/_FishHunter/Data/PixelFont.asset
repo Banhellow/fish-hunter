@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c708797719d3cc4783ff046762d0de5, type: 3}
   m_Name: PixelFont
   m_EditorClassIdentifier: Assembly-CSharp::FishHunter.UI.Core.PixelFont
-  texture: {fileID: 2800000, guid: 6ef7d2725994ab04095e91fd81e951eb, type: 3}
-  characters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:!-.,?/+'' '
-  columns: 16
-  cellWidth: 6
-  cellHeight: 8
-  glyphWidth: 5
-  glyphHeight: 7
-  letterSpacing: 1
+  Texture: {fileID: 2800000, guid: 6ef7d2725994ab04095e91fd81e951eb, type: 3}
+  Characters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:!-.,?/+'' '
+  Columns: 16
+  CellWidth: 6
+  CellHeight: 8
+  GlyphWidth: 5
+  GlyphHeight: 7
+  LetterSpacing: 1

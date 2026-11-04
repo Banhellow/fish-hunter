@@ -7,7 +7,7 @@ namespace FishHunter.Gameplay
     [RequireComponent(typeof(PlayerFish))]
     public sealed class PlayerAim : MonoBehaviour
     {
-        [SerializeField] private PlayerFish player;
+        [SerializeField] private PlayerFish _player;
 
         private InputService _input;
         private CameraService _camera;
@@ -17,7 +17,7 @@ namespace FishHunter.Gameplay
 
         private void Start()
         {
-            if (player == null) player = GetComponent<PlayerFish>();
+            if (_player == null) _player = GetComponent<PlayerFish>();
             _input = ServiceLocator.Get<InputService>();
             _camera = ServiceLocator.Get<CameraService>();
             _flow = ServiceLocator.Get<GameFlowService>();
@@ -36,11 +36,11 @@ namespace FishHunter.Gameplay
             if (_flow.State != GameState.Playing) return;
 
             Vector2 pointer = _camera.ScreenToWorld(_input.PointerScreenPosition);
-            Vector2 direction = pointer - player.Position;
+            Vector2 direction = pointer - _player.Position;
             if (direction.sqrMagnitude < 0.0001f) return;
 
             AimDirection = direction.normalized;
-            player.SetFacing(AimDirection);
+            _player.SetFacing(AimDirection);
         }
     }
 }

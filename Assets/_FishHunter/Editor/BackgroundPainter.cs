@@ -35,23 +35,23 @@ namespace FishHunter.EditorTools
             var c = new PixelCanvas(Width, Height);
             var rng = new System.Random(1337);
 
-            Color32 sandDark = new Color32(168, 148, 100, 255);
-            Color32 sand = new Color32(196, 178, 126, 255);
-            Color32 sandLight = new Color32(218, 202, 150, 255);
+            Color32 sandDark = new(168, 148, 100, 255);
+            Color32 sand = new(196, 178, 126, 255);
+            Color32 sandLight = new(218, 202, 150, 255);
 
             for (int y = 0; y < Height; y++)
-            for (int x = 0; x < Width; x++)
-            {
-                float n = ValueNoise(x / 38f, y / 38f, 1) * 0.65f + ValueNoise(x / 12f, y / 12f, 2) * 0.35f;
-                float ripple = Mathf.Sin(x * 0.16f + y * 0.05f + n * 3.2f);
-                Color32 col = n > 0.64f ? sandLight : n < 0.36f ? sandDark : sand;
-                if (ripple > 0.93f) col = sandDark;
-                else if (ripple > 0.72f && ripple <= 0.84f) col = sandLight;
-                if (Hash(x, y, 7) > 0.985f) col = Hash(x, y, 8) > 0.5f ? sandLight : sandDark;
-                c.Set(x, y, col);
-            }
+                for (int x = 0; x < Width; x++)
+                {
+                    float n = ValueNoise(x / 38f, y / 38f, 1) * 0.65f + ValueNoise(x / 12f, y / 12f, 2) * 0.35f;
+                    float ripple = Mathf.Sin(x * 0.16f + y * 0.05f + n * 3.2f);
+                    Color32 col = n > 0.64f ? sandLight : n < 0.36f ? sandDark : sand;
+                    if (ripple > 0.93f) col = sandDark;
+                    else if (ripple > 0.72f && ripple <= 0.84f) col = sandLight;
+                    if (Hash(x, y, 7) > 0.985f) col = Hash(x, y, 8) > 0.5f ? sandLight : sandDark;
+                    c.Set(x, y, col);
+                }
 
-            Vector2 center = new Vector2(Width / 2f, Height / 2f);
+            Vector2 center = new(Width / 2f, Height / 2f);
             bool FarFromCenter(int x, int y, float min) => Vector2.Distance(new Vector2(x, y), center) > min;
 
             // Dark sand patches (depressions)
@@ -60,12 +60,12 @@ namespace FishHunter.EditorTools
                 int x = rng.Next(Width), y = rng.Next(Height);
                 float rx = rng.Next(18, 40), ry = rng.Next(10, 24);
                 for (int yy = (int)(y - ry); yy <= y + ry; yy++)
-                for (int xx = (int)(x - rx); xx <= x + rx; xx++)
-                {
-                    float nx = (xx - x) / rx, ny = (yy - y) / ry;
-                    float d = nx * nx + ny * ny + (ValueNoise(xx / 6f, yy / 6f, 3) - 0.5f) * 0.5f;
-                    if (d < 1f && ((xx + yy) % 2 == 0 || d < 0.7f)) c.Set(xx, yy, sandDark);
-                }
+                    for (int xx = (int)(x - rx); xx <= x + rx; xx++)
+                    {
+                        float nx = (xx - x) / rx, ny = (yy - y) / ry;
+                        float d = nx * nx + ny * ny + (ValueNoise(xx / 6f, yy / 6f, 3) - 0.5f) * 0.5f;
+                        if (d < 1f && ((xx + yy) % 2 == 0 || d < 0.7f)) c.Set(xx, yy, sandDark);
+                    }
             }
 
             for (int i = 0; i < 16; i++)
@@ -103,69 +103,69 @@ namespace FishHunter.EditorTools
             }
 
             // Water tint + vignette
-            Color32 water = new Color32(20, 120, 150, 255);
-            Color32 deep = new Color32(10, 40, 80, 255);
+            Color32 water = new(20, 120, 150, 255);
+            Color32 deep = new(10, 40, 80, 255);
             for (int y = 0; y < Height; y++)
-            for (int x = 0; x < Width; x++)
-            {
-                Color32 src = c.Get(x, y);
-                Color tinted = Color.Lerp(src, water, 0.38f);
-                float dx = (x - center.x) / center.x, dy = (y - center.y) / center.y;
-                float v = Mathf.Clamp01((dx * dx + dy * dy - 0.55f) * 0.5f);
-                // Dithered vignette: ordered 2x2 threshold keeps it pixel-art without visible bands.
-                float threshold = ((x & 1) * 2 + (y & 1)) / 4f * 0.12f;
-                v = Mathf.Floor((v + threshold) * 6f) / 6f;
-                tinted = Color.Lerp(tinted, deep, v);
-                c.Set(x, y, tinted);
-            }
+                for (int x = 0; x < Width; x++)
+                {
+                    Color32 src = c.Get(x, y);
+                    Color tinted = Color.Lerp(src, water, 0.38f);
+                    float dx = (x - center.x) / center.x, dy = (y - center.y) / center.y;
+                    float v = Mathf.Clamp01((dx * dx + dy * dy - 0.55f) * 0.5f);
+                    // Dithered vignette: ordered 2x2 threshold keeps it pixel-art without visible bands.
+                    float threshold = ((x & 1) * 2 + (y & 1)) / 4f * 0.12f;
+                    v = Mathf.Floor((v + threshold) * 6f) / 6f;
+                    tinted = Color.Lerp(tinted, deep, v);
+                    c.Set(x, y, tinted);
+                }
 
             return c;
         }
 
         private static void Rock(PixelCanvas c, int x, int y, int rx, int ry, System.Random rng)
         {
-            Color32 outline = new Color32(48, 50, 60, 255);
-            Color32 dark = new Color32(84, 86, 98, 255);
-            Color32 mid = new Color32(118, 120, 130, 255);
-            Color32 light = new Color32(156, 158, 166, 255);
-            Color32 moss = new Color32(78, 128, 70, 255);
+            Color32 outline = new(48, 50, 60, 255);
+            Color32 dark = new(84, 86, 98, 255);
+            Color32 mid = new(118, 120, 130, 255);
+            Color32 light = new(156, 158, 166, 255);
+            Color32 moss = new(78, 128, 70, 255);
             int seed = rng.Next(1000);
 
             var rock = new PixelCanvas(rx * 2 + 4, ry * 2 + 4);
             float cx = rx + 2, cy = ry + 2;
             for (int yy = 0; yy < rock.Height; yy++)
-            for (int xx = 0; xx < rock.Width; xx++)
-            {
-                float nx = (xx - cx) / rx, ny = (yy - cy) / ry;
-                float d = nx * nx + ny * ny + (ValueNoise(xx / 3f, yy / 3f, seed) - 0.5f) * 0.6f;
-                if (d > 1f) continue;
-                float light01 = -nx * 0.5f + ny * 0.7f;
-                Color32 col = light01 > 0.35f ? light : light01 < -0.3f ? dark : mid;
-                if (ValueNoise(xx / 2f, yy / 2f, seed + 1) > 0.78f && ny > 0f) col = moss;
-                rock.Set(xx, yy, col);
-            }
+                for (int xx = 0; xx < rock.Width; xx++)
+                {
+                    float nx = (xx - cx) / rx, ny = (yy - cy) / ry;
+                    float d = nx * nx + ny * ny + (ValueNoise(xx / 3f, yy / 3f, seed) - 0.5f) * 0.6f;
+                    if (d > 1f) continue;
+                    float light01 = -nx * 0.5f + ny * 0.7f;
+                    Color32 col = light01 > 0.35f ? light : light01 < -0.3f ? dark : mid;
+                    if (ValueNoise(xx / 2f, yy / 2f, seed + 1) > 0.78f && ny > 0f) col = moss;
+                    rock.Set(xx, yy, col);
+                }
 
             rock.Outline(outline);
             // Contact shadow on the sand (bottom-right).
             for (int yy = 0; yy < rock.Height; yy++)
-            for (int xx = 0; xx < rock.Width; xx++)
-                if (rock.IsOpaque(xx, yy)) c.Blend(x - rx - 2 + xx + 2, y - ry - 2 + yy - 2, new Color32(40, 40, 30, 90));
+                for (int xx = 0; xx < rock.Width; xx++)
+                    if (rock.IsOpaque(xx, yy)) c.Blend(x - rx - 2 + xx + 2, y - ry - 2 + yy - 2, new Color32(40, 40, 30, 90));
             c.Stamp(rock, x - rx - 2, y - ry - 2);
         }
 
         private static void Kelp(PixelCanvas c, int x, int y, System.Random rng)
         {
-            Color32 dark = new Color32(28, 96, 52, 255);
-            Color32 mid = new Color32(46, 140, 70, 255);
-            Color32 light = new Color32(110, 190, 90, 255);
+            Color32 dark = new(28, 96, 52, 255);
+            Color32 mid = new(46, 140, 70, 255);
+            Color32 light = new(110, 190, 90, 255);
             int strands = rng.Next(4, 8);
             for (int s = 0; s < strands; s++)
             {
                 double angle = rng.NextDouble() * Mathf.PI * 2f;
                 int length = rng.Next(14, 30);
                 float phase = (float)rng.NextDouble() * 6f;
-                Vector2 dir = new Vector2(Mathf.Cos((float)angle), Mathf.Sin((float)angle));
-                Vector2 side = new Vector2(-dir.y, dir.x);
+                Vector2 dir = new(Mathf.Cos((float)angle), Mathf.Sin((float)angle));
+                Vector2 side = new(-dir.y, dir.x);
                 for (int i = 0; i < length; i++)
                 {
                     float wob = Mathf.Sin(i * 0.35f + phase) * 2.2f;
@@ -185,11 +185,11 @@ namespace FishHunter.EditorTools
         {
             Color32[] palettes =
             {
-                new Color32(232, 96, 120, 255), new Color32(250, 150, 90, 255), new Color32(190, 110, 220, 255)
+                new(232, 96, 120, 255), new(250, 150, 90, 255), new(190, 110, 220, 255)
             };
             Color32 col = palettes[rng.Next(palettes.Length)];
-            Color32 dark = new Color32((byte)(col.r * 0.6f), (byte)(col.g * 0.6f), (byte)(col.b * 0.6f), 255);
-            Color32 tip = new Color32((byte)Mathf.Min(255, col.r + 40), (byte)Mathf.Min(255, col.g + 60), (byte)Mathf.Min(255, col.b + 50), 255);
+            Color32 dark = new((byte)(col.r * 0.6f), (byte)(col.g * 0.6f), (byte)(col.b * 0.6f), 255);
+            Color32 tip = new((byte)Mathf.Min(255, col.r + 40), (byte)Mathf.Min(255, col.g + 60), (byte)Mathf.Min(255, col.b + 50), 255);
             int blobs = rng.Next(5, 9);
             for (int i = 0; i < blobs; i++)
             {
@@ -204,9 +204,9 @@ namespace FishHunter.EditorTools
 
         private static void Starfish(PixelCanvas c, int x, int y, int r, double rot)
         {
-            Color32 col = new Color32(244, 124, 62, 255);
-            Color32 dot = new Color32(255, 214, 150, 255);
-            Color32 outline = new Color32(110, 44, 22, 255);
+            Color32 col = new(244, 124, 62, 255);
+            Color32 dot = new(255, 214, 150, 255);
+            Color32 outline = new(110, 44, 22, 255);
             var s = new PixelCanvas(r * 2 + 5, r * 2 + 5);
             int cx = r + 2, cy = r + 2;
             for (int arm = 0; arm < 5; arm++)
@@ -228,7 +228,7 @@ namespace FishHunter.EditorTools
         private static void Shell(PixelCanvas c, int x, int y, System.Random rng)
         {
             Color32 light = rng.Next(2) == 0 ? new Color32(250, 226, 220, 255) : new Color32(236, 222, 196, 255);
-            Color32 dark = new Color32(176, 140, 130, 255);
+            Color32 dark = new(176, 140, 130, 255);
             c.FillRect(x, y, 3, 2, light);
             c.Set(x + 1, y + 2, light);
             c.Set(x + 1, y, dark);
@@ -251,18 +251,18 @@ namespace FishHunter.EditorTools
             var c = new PixelCanvas(Width / CausticBlock, Height / CausticBlock);
             float t = frame / (float)frameCount * Mathf.PI * 2f;
             for (int by = 0; by < c.Height; by++)
-            for (int bx = 0; bx < c.Width; bx++)
-            {
-                int x = bx * CausticBlock, y = by * CausticBlock;
-                float v1 = Mathf.Sin(x * 0.045f + 1.7f * Mathf.Sin(y * 0.031f + t));
-                float v2 = Mathf.Sin(y * 0.052f + 1.3f * Mathf.Sin(x * 0.027f - t));
-                float line = Mathf.Abs(v1 + v2);
-                Color32 col;
-                if (line < 0.06f) col = new Color32(210, 245, 255, 70);
-                else if (line < 0.14f) col = new Color32(180, 235, 255, 34);
-                else continue;
-                c.Set(bx, by, col);
-            }
+                for (int bx = 0; bx < c.Width; bx++)
+                {
+                    int x = bx * CausticBlock, y = by * CausticBlock;
+                    float v1 = Mathf.Sin(x * 0.045f + 1.7f * Mathf.Sin(y * 0.031f + t));
+                    float v2 = Mathf.Sin(y * 0.052f + 1.3f * Mathf.Sin(x * 0.027f - t));
+                    float line = Mathf.Abs(v1 + v2);
+                    Color32 col;
+                    if (line < 0.06f) col = new Color32(210, 245, 255, 70);
+                    else if (line < 0.14f) col = new Color32(180, 235, 255, 34);
+                    else continue;
+                    c.Set(bx, by, col);
+                }
 
             return c;
         }

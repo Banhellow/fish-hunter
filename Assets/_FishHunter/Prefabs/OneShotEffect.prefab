@@ -105,12 +105,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 348e5e8658b9d0d4ba68dc688fa5a039, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishHunter.Animation.SpriteFrameAnimator
-  target: {fileID: 5782847814540778167}
-  frames: []
-  framesPerSecond: 14
-  loop: 0
-  playOnEnable: 0
-  randomStartFrame: 0
+  _target: {fileID: 5782847814540778167}
+  _frames: []
+  _framesPerSecond: 14
+  _loop: 0
+  _playOnEnable: 0
+  _randomStartFrame: 0
 --- !u!114 &3109715223781803828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,5 +123,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abb06151eedc23e47863a3e36233462a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishHunter.Animation.OneShotEffect
-  animator: {fileID: 5726958136034231313}
-  spriteRenderer: {fileID: 5782847814540778167}
+  _animator: {fileID: 5726958136034231313}
+  _spriteRenderer: {fileID: 5782847814540778167}

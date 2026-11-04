@@ -9,7 +9,7 @@ namespace FishHunter.UI.Core
     /// </summary>
     public abstract class ViewModelBase : IDisposable
     {
-        private readonly List<Action> _cleanup = new List<Action>();
+        private readonly List<Action> _cleanup = new();
         private bool _disposed;
 
         /// <summary>Register an unsubscribe action that runs when the ViewModel is disposed.</summary>
@@ -24,7 +24,7 @@ namespace FishHunter.UI.Core
         {
             if (_disposed) return;
             _disposed = true;
-            foreach (var action in _cleanup) action();
+            foreach (Action action in _cleanup) action();
             _cleanup.Clear();
             OnDispose();
         }

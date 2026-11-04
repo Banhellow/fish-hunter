@@ -13,12 +13,12 @@ namespace FishHunter.Core
     [DefaultExecutionOrder(-1000)]
     public sealed class GameBootstrap : MonoBehaviour
     {
-        [SerializeField] private GameConfig gameConfig;
-        [SerializeField] private Camera gameCamera;
-        [SerializeField] private Transform poolRoot;
-        [SerializeField] private PlayerFish player;
-        [SerializeField] private EnemySpawner spawner;
-        [SerializeField] private UIScreenService screens;
+        [SerializeField] private GameConfig _gameConfig;
+        [SerializeField] private Camera _gameCamera;
+        [SerializeField] private Transform _poolRoot;
+        [SerializeField] private PlayerFish _player;
+        [SerializeField] private EnemySpawner _spawner;
+        [SerializeField] private UIScreenService _screens;
 
         private GameFlowService _flow;
 
@@ -29,26 +29,26 @@ namespace FishHunter.Core
 
             var input = new InputService();
             var score = new ScoreService();
-            var lives = new LivesService(gameConfig.startLives);
-            var difficulty = new DifficultyService(gameConfig);
-            var pool = new PoolService(poolRoot != null ? poolRoot : transform);
+            var lives = new LivesService(_gameConfig.StartLives);
+            var difficulty = new DifficultyService(_gameConfig);
+            var pool = new PoolService(_poolRoot != null ? _poolRoot : transform);
             _flow = new GameFlowService(score, lives, difficulty, pool, input);
 
-            ServiceLocator.Register(new ConfigService(gameConfig));
-            ServiceLocator.Register(new CameraService(gameCamera != null ? gameCamera : Camera.main));
+            ServiceLocator.Register(new ConfigService(_gameConfig));
+            ServiceLocator.Register(new CameraService(_gameCamera != null ? _gameCamera : Camera.main));
             ServiceLocator.Register(input);
             ServiceLocator.Register(score);
             ServiceLocator.Register(lives);
             ServiceLocator.Register(difficulty);
             ServiceLocator.Register(pool);
             ServiceLocator.Register(_flow);
-            ServiceLocator.Register(player);
-            ServiceLocator.Register(spawner);
-            ServiceLocator.Register(screens);
+            ServiceLocator.Register(_player);
+            ServiceLocator.Register(_spawner);
+            ServiceLocator.Register(_screens);
 
-            player.Initialize();
-            spawner.Initialize();
-            screens.Initialize();
+            _player.Initialize();
+            _spawner.Initialize();
+            _screens.Initialize();
 
             _flow.ReturnToMenu();
         }

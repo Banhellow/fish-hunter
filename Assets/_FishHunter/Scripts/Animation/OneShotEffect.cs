@@ -8,20 +8,20 @@ namespace FishHunter.Animation
     [RequireComponent(typeof(SpriteFrameAnimator))]
     public sealed class OneShotEffect : MonoBehaviour
     {
-        [SerializeField] private SpriteFrameAnimator animator;
-        [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private SpriteFrameAnimator _animator;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
 
         private void Awake()
         {
-            if (animator == null) animator = GetComponent<SpriteFrameAnimator>();
-            if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+            if (_animator == null) _animator = GetComponent<SpriteFrameAnimator>();
+            if (_spriteRenderer == null) _spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
         public void Play(Sprite[] frames, float fps, Color tint, bool flipY = false)
         {
-            spriteRenderer.color = tint;
-            spriteRenderer.flipY = flipY;
-            animator.Play(frames, fps, false, Despawn);
+            _spriteRenderer.color = tint;
+            _spriteRenderer.flipY = flipY;
+            _animator.Play(frames, fps, false, Despawn);
         }
 
         private void Despawn()

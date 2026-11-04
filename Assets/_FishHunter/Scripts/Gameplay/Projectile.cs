@@ -10,8 +10,8 @@ namespace FishHunter.Gameplay
     {
         private const float OffscreenMargin = 1.5f;
 
-        [SerializeField] private Rigidbody2D body;
-        [SerializeField] private TrailRenderer trail;
+        [SerializeField] private Rigidbody2D _body;
+        [SerializeField] private TrailRenderer _trail;
 
         private PoolService _pool;
         private CameraService _camera;
@@ -20,7 +20,7 @@ namespace FishHunter.Gameplay
 
         private void Awake()
         {
-            if (body == null) body = GetComponent<Rigidbody2D>();
+            if (_body == null) _body = GetComponent<Rigidbody2D>();
         }
 
         public void Launch(Vector2 direction, float speed, float lifetime)
@@ -31,9 +31,9 @@ namespace FishHunter.Gameplay
             _lifetime = lifetime;
             _active = true;
             transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-            body.position = transform.position;
-            body.linearVelocity = direction.normalized * speed;
-            if (trail != null) trail.Clear();
+            _body.position = transform.position;
+            _body.linearVelocity = direction.normalized * speed;
+            if (_trail != null) _trail.Clear();
         }
 
         private void Update()
@@ -65,8 +65,8 @@ namespace FishHunter.Gameplay
         public void OnDespawned()
         {
             _active = false;
-            body.linearVelocity = Vector2.zero;
-            if (trail != null) trail.Clear();
+            _body.linearVelocity = Vector2.zero;
+            if (_trail != null) _trail.Clear();
         }
     }
 }

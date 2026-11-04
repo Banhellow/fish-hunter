@@ -12,9 +12,9 @@ namespace FishHunter.Enemies
     /// </summary>
     public sealed class Enemy : MonoBehaviour, IPoolable
     {
-        [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private SpriteFrameAnimator animator;
-        [SerializeField] private CircleCollider2D bodyCollider;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
+        [SerializeField] private SpriteFrameAnimator _animator;
+        [SerializeField] private CircleCollider2D _bodyCollider;
 
         private IEnemyMovementStrategy _strategy;
         private Action<Enemy, bool> _onRemoved;
@@ -43,10 +43,10 @@ namespace FishHunter.Enemies
             Phase = UnityEngine.Random.value;
             IsAlive = true;
 
-            bodyCollider.radius = type.colliderRadius;
-            spriteRenderer.color = Color.white;
+            _bodyCollider.radius = type.ColliderRadius;
+            _spriteRenderer.color = Color.white;
             Face(target - SpawnPosition);
-            animator.Play(type.swimFrames, type.swimFps * Mathf.Lerp(0.9f, 1.3f, Mathf.InverseLerp(type.speedMin, type.speedMax * 2f, speed)), true, null, true);
+            _animator.Play(type.SwimFrames, type.SwimFps * Mathf.Lerp(0.9f, 1.3f, Mathf.InverseLerp(type.SpeedMin, type.SpeedMax * 2f, speed)), true, null, true);
         }
 
         private void Update()
@@ -69,7 +69,7 @@ namespace FishHunter.Enemies
         {
             if (!IsAlive) return;
             IsAlive = false;
-            var callback = _onRemoved;
+            Action<Enemy, bool> callback = _onRemoved;
             _onRemoved = null;
             callback?.Invoke(this, killedByPlayer);
         }
@@ -78,7 +78,7 @@ namespace FishHunter.Enemies
         {
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0f, 0f, angle);
-            spriteRenderer.flipY = direction.x < 0f;
+            _spriteRenderer.flipY = direction.x < 0f;
         }
 
         public void OnSpawned()

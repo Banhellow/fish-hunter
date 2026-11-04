@@ -108,15 +108,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 348e5e8658b9d0d4ba68dc688fa5a039, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishHunter.Animation.SpriteFrameAnimator
-  target: {fileID: 8711869295060254176}
-  frames:
+  _target: {fileID: 8711869295060254176}
+  _frames:
   - {fileID: 21300000, guid: f018cec906c0e6d48baf248a97a796aa, type: 3}
   - {fileID: 21300000, guid: 24805c6f96894ca4189de0af28a8b72d, type: 3}
   - {fileID: 21300000, guid: 2465905c670827f489b7f32fbe3e4370, type: 3}
-  framesPerSecond: 12
-  loop: 1
-  playOnEnable: 1
-  randomStartFrame: 1
+  _framesPerSecond: 12
+  _loop: 1
+  _playOnEnable: 1
+  _randomStartFrame: 1
 --- !u!50 &2862612510418517507
 Rigidbody2D:
   serializedVersion: 5
@@ -311,5 +311,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5491c98d50b9e4244b496d2b700aa370, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishHunter.Gameplay.Projectile
-  body: {fileID: 2862612510418517507}
-  trail: {fileID: 3397360939810983815}
+  _body: {fileID: 2862612510418517507}
+  _trail: {fileID: 3397360939810983815}

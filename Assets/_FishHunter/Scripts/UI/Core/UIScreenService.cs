@@ -12,27 +12,27 @@ namespace FishHunter.UI.Core
     /// </summary>
     public sealed class UIScreenService : MonoBehaviour, IService, IInitializable
     {
-        [SerializeField] private MainMenuView mainMenuView;
-        [SerializeField] private HudView hudView;
-        [SerializeField] private PauseView pauseView;
-        [SerializeField] private GameOverView gameOverView;
+        [SerializeField] private MainMenuView _mainMenuView;
+        [SerializeField] private HudView _hudView;
+        [SerializeField] private PauseView _pauseView;
+        [SerializeField] private GameOverView _gameOverView;
 
-        private readonly Dictionary<Type, ViewBase> _views = new Dictionary<Type, ViewBase>();
+        private readonly Dictionary<Type, ViewBase> _views = new();
         private GameFlowService _flow;
 
         public void Initialize()
         {
             _flow = ServiceLocator.Get<GameFlowService>();
 
-            mainMenuView.Bind(new MainMenuViewModel());
-            hudView.Bind(new HudViewModel());
-            pauseView.Bind(new PauseViewModel());
-            gameOverView.Bind(new GameOverViewModel());
+            _mainMenuView.Bind(new MainMenuViewModel());
+            _hudView.Bind(new HudViewModel());
+            _pauseView.Bind(new PauseViewModel());
+            _gameOverView.Bind(new GameOverViewModel());
 
-            Register(mainMenuView);
-            Register(hudView);
-            Register(pauseView);
-            Register(gameOverView);
+            Register(_mainMenuView);
+            Register(_hudView);
+            Register(_pauseView);
+            Register(_gameOverView);
 
             _flow.StateChanged += ApplyState;
             ApplyState(_flow.State);
@@ -53,7 +53,7 @@ namespace FishHunter.UI.Core
 
         public void HideAll()
         {
-            foreach (var view in _views.Values) view.Hide();
+            foreach (ViewBase view in _views.Values) view.Hide();
         }
 
         private void ApplyState(GameState state)

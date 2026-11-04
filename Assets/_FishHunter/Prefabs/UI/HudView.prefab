@@ -65,15 +65,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 231c59606c05f704384e6378bc6a8f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishHunter.UI.Screens.HudView
-  canvasGroup: {fileID: 6289080322963569381}
-  scoreText: {fileID: 7191871936269709881}
-  hearts:
+  _canvasGroup: {fileID: 6289080322963569381}
+  _scoreText: {fileID: 7191871936269709881}
+  _hearts:
   - {fileID: 6418046869245077818}
   - {fileID: 7251591372266851368}
   - {fileID: 956242398739630137}
-  heartFull: {fileID: 21300000, guid: af2f3c9e45657ae4ebe81abe194cfc8f, type: 3}
-  heartEmpty: {fileID: 21300000, guid: 3c6822bfd03852e4e9d7471d54d020e1, type: 3}
-  dimmedColor: {r: 1, g: 1, b: 1, a: 0.55}
+  _heartFull: {fileID: 21300000, guid: af2f3c9e45657ae4ebe81abe194cfc8f, type: 3}
+  _heartEmpty: {fileID: 21300000, guid: 3c6822bfd03852e4e9d7471d54d020e1, type: 3}
+  _dimmedColor: {r: 1, g: 1, b: 1, a: 0.55}
 --- !u!1 &2251093646893481711
 GameObject:
   m_ObjectHideFlags: 0
@@ -289,12 +289,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  font: {fileID: 11400000, guid: 1e68083b1796d1f45aaf2142be026e47, type: 2}
-  text: 'SCORE: 0'
-  pixelScale: 5
-  alignment: 0
-  shadow: 1
-  shadowColor: {r: 0.04, g: 0.08, b: 0.18, a: 0.9}
+  _font: {fileID: 11400000, guid: 1e68083b1796d1f45aaf2142be026e47, type: 2}
+  _text: 'SCORE: 0'
+  _pixelScale: 5
+  _alignment: 0
+  _shadow: 1
+  _shadowColor: {r: 0.04, g: 0.08, b: 0.18, a: 0.9}
 --- !u!1 &6429153855588931683
 GameObject:
   m_ObjectHideFlags: 0

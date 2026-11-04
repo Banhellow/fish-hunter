@@ -17,65 +17,65 @@ namespace FishHunter.UI.Core
             Right
         }
 
-        [SerializeField] private PixelFont font;
-        [SerializeField, TextArea] private string text = "TEXT";
-        [SerializeField, Min(1)] private int pixelScale = 4;
-        [SerializeField] private Align alignment = Align.Left;
-        [SerializeField] private bool shadow = true;
-        [SerializeField] private Color shadowColor = new Color(0.04f, 0.08f, 0.18f, 0.9f);
+        [SerializeField] private PixelFont _font;
+        [SerializeField, TextArea] private string _text = "TEXT";
+        [SerializeField, Min(1)] private int _pixelScale = 4;
+        [SerializeField] private Align _alignment = Align.Left;
+        [SerializeField] private bool _shadow = true;
+        [SerializeField] private Color _shadowColor = new(0.04f, 0.08f, 0.18f, 0.9f);
 
-        public override Texture mainTexture => font != null && font.texture != null ? font.texture : s_WhiteTexture;
+        public override Texture mainTexture => _font != null && _font.Texture != null ? _font.Texture : s_WhiteTexture;
 
         public PixelFont Font
         {
-            get => font;
-            set { font = value; SetAllDirty(); }
+            get => _font;
+            set { _font = value; SetAllDirty(); }
         }
 
         public string Text
         {
-            get => text;
+            get => _text;
             set
             {
-                if (text == value) return;
-                text = value;
+                if (_text == value) return;
+                _text = value;
                 SetVerticesDirty();
             }
         }
 
         public int PixelScale
         {
-            get => pixelScale;
-            set { pixelScale = Mathf.Max(1, value); SetVerticesDirty(); }
+            get => _pixelScale;
+            set { _pixelScale = Mathf.Max(1, value); SetVerticesDirty(); }
         }
 
         public Align Alignment
         {
-            get => alignment;
-            set { alignment = value; SetVerticesDirty(); }
+            get => _alignment;
+            set { _alignment = value; SetVerticesDirty(); }
         }
 
         public bool Shadow
         {
-            get => shadow;
-            set { shadow = value; SetVerticesDirty(); }
+            get => _shadow;
+            set { _shadow = value; SetVerticesDirty(); }
         }
 
         /// <summary>Size of the rendered string in canvas units.</summary>
-        public Vector2 PreferredSize => font == null
+        public Vector2 PreferredSize => _font == null
             ? Vector2.zero
-            : new Vector2(font.MeasureWidth(text) * pixelScale, font.glyphHeight * pixelScale);
+            : new Vector2(_font.MeasureWidth(_text) * _pixelScale, _font.GlyphHeight * _pixelScale);
 
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             vh.Clear();
-            if (font == null || font.texture == null || string.IsNullOrEmpty(text)) return;
+            if (_font == null || _font.Texture == null || string.IsNullOrEmpty(_text)) return;
 
             Rect rect = rectTransform.rect;
-            float width = font.MeasureWidth(text) * pixelScale;
-            float height = font.glyphHeight * pixelScale;
+            float width = _font.MeasureWidth(_text) * _pixelScale;
+            float height = _font.GlyphHeight * _pixelScale;
 
-            float x = alignment switch
+            float x = _alignment switch
             {
                 Align.Center => rect.center.x - width * 0.5f,
                 Align.Right => rect.xMax - width,
@@ -85,23 +85,23 @@ namespace FishHunter.UI.Core
             x = Mathf.Round(x);
             y = Mathf.Round(y);
 
-            if (shadow) AddString(vh, x + pixelScale, y - pixelScale, shadowColor * new Color(1f, 1f, 1f, color.a));
+            if (_shadow) AddString(vh, x + _pixelScale, y - _pixelScale, _shadowColor * new Color(1f, 1f, 1f, color.a));
             AddString(vh, x, y, color);
         }
 
         private void AddString(VertexHelper vh, float startX, float startY, Color32 tint)
         {
-            float advance = (font.glyphWidth + font.letterSpacing) * pixelScale;
-            float glyphW = font.glyphWidth * pixelScale;
-            float glyphH = font.glyphHeight * pixelScale;
+            float advance = (_font.GlyphWidth + _font.LetterSpacing) * _pixelScale;
+            float glyphW = _font.GlyphWidth * _pixelScale;
+            float glyphH = _font.GlyphHeight * _pixelScale;
             float x = startX;
 
-            foreach (char c in text)
+            foreach (char c in _text)
             {
-                int index = font.IndexOf(c);
+                int index = _font.IndexOf(c);
                 if (index >= 0 && c != ' ')
                 {
-                    Rect uv = font.GetUv(index);
+                    Rect uv = _font.GetUv(index);
                     int vi = vh.currentVertCount;
                     vh.AddVert(new Vector3(x, startY), tint, new Vector2(uv.xMin, uv.yMin));
                     vh.AddVert(new Vector3(x, startY + glyphH), tint, new Vector2(uv.xMin, uv.yMax));

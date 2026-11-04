@@ -5,16 +5,16 @@ namespace FishHunter.EditorTools
     /// <summary>Frame-by-frame effects: enemy death burst, projectile bubble, muzzle splash.</summary>
     public static class EffectPainter
     {
-        private static readonly Color32 White = new Color32(255, 255, 255, 255);
-        private static readonly Color32 BubbleRim = new Color32(190, 240, 255, 255);
-        private static readonly Color32 BubbleFill = new Color32(160, 225, 255, 90);
-        private static readonly Color32 Bone = new Color32(235, 235, 220, 255);
-        private static readonly Color32 BoneShade = new Color32(150, 160, 170, 255);
+        private static readonly Color32 _white = new(255, 255, 255, 255);
+        private static readonly Color32 _bubbleRim = new(190, 240, 255, 255);
+        private static readonly Color32 _bubbleFill = new(160, 225, 255, 90);
+        private static readonly Color32 _bone = new(235, 235, 220, 255);
+        private static readonly Color32 _boneShade = new(150, 160, 170, 255);
 
         private static void Bubble(PixelCanvas c, float x, float y, float r, byte alpha = 255)
         {
-            var rim = BubbleRim; rim.a = alpha;
-            var fill = BubbleFill; fill.a = (byte)(BubbleFill.a * alpha / 255);
+            Color32 rim = _bubbleRim; rim.a = alpha;
+            Color32 fill = _bubbleFill; fill.a = (byte)(_bubbleFill.a * alpha / 255);
             if (r >= 1.5f) c.FillCircle(x, y, r - 1f, fill);
             c.Ring(x, y, r, 1f, rim);
             if (r >= 1.5f) c.Set(Mathf.RoundToInt(x - r * 0.4f), Mathf.RoundToInt(y + r * 0.4f), new Color32(255, 255, 255, alpha));
@@ -22,8 +22,8 @@ namespace FishHunter.EditorTools
 
         private static void FishBone(PixelCanvas c, int cx, int cy, byte alpha)
         {
-            var bone = Bone; bone.a = alpha;
-            var shade = BoneShade; shade.a = alpha;
+            Color32 bone = _bone; bone.a = alpha;
+            Color32 shade = _boneShade; shade.a = alpha;
             for (int x = -5; x <= 3; x++) c.Set(cx + x, cy, bone);
             for (int i = 0; i < 3; i++)
             {
@@ -42,8 +42,8 @@ namespace FishHunter.EditorTools
         /// <summary>6-frame pop: flash, ring of scales, fish bone, bubbles drifting up.</summary>
         public static PixelCanvas[] Death(FishStyle style)
         {
-            const int size = 28;
-            const float cx = 14f, cy = 14f;
+            const int Size = 28;
+            const float CenterX = 14f, CenterY = 14f;
             var frames = new PixelCanvas[6];
             Vector2[] dirs = new Vector2[7];
             for (int i = 0; i < dirs.Length; i++)
@@ -54,26 +54,26 @@ namespace FishHunter.EditorTools
 
             for (int f = 0; f < frames.Length; f++)
             {
-                var c = new PixelCanvas(size, size);
+                var c = new PixelCanvas(Size, Size);
                 switch (f)
                 {
                     case 0:
-                        c.FillCircle(cx, cy, 5f, style.highlight);
-                        c.FillCircle(cx, cy, 3.5f, White);
+                        c.FillCircle(CenterX, CenterY, 5f, style.Highlight);
+                        c.FillCircle(CenterX, CenterY, 3.5f, _white);
                         break;
                     case 1:
-                        c.Ring(cx, cy, 8f, 2f, style.highlight);
-                        c.FillCircle(cx, cy, 2.5f, White);
-                        foreach (var d in dirs) c.FillRect(Mathf.RoundToInt(cx + d.x * 6f), Mathf.RoundToInt(cy + d.y * 6f), 2, 2, style.mid);
+                        c.Ring(CenterX, CenterY, 8f, 2f, style.Highlight);
+                        c.FillCircle(CenterX, CenterY, 2.5f, _white);
+                        foreach (Vector2 d in dirs) c.FillRect(Mathf.RoundToInt(CenterX + d.x * 6f), Mathf.RoundToInt(CenterY + d.y * 6f), 2, 2, style.Mid);
                         break;
                     case 2:
-                        c.Ring(cx, cy, 11f, 1f, style.top);
-                        foreach (var d in dirs) c.FillRect(Mathf.RoundToInt(cx + d.x * 9f), Mathf.RoundToInt(cy + d.y * 9f), 2, 2, style.fin);
+                        c.Ring(CenterX, CenterY, 11f, 1f, style.Top);
+                        foreach (Vector2 d in dirs) c.FillRect(Mathf.RoundToInt(CenterX + d.x * 9f), Mathf.RoundToInt(CenterY + d.y * 9f), 2, 2, style.Fin);
                         FishBone(c, 14, 14, 255);
                         Bubble(c, 8, 18, 2f);
                         break;
                     case 3:
-                        foreach (var d in dirs) c.Set(Mathf.RoundToInt(cx + d.x * 11f), Mathf.RoundToInt(cy + d.y * 11f), style.fin);
+                        foreach (Vector2 d in dirs) c.Set(Mathf.RoundToInt(CenterX + d.x * 11f), Mathf.RoundToInt(CenterY + d.y * 11f), style.Fin);
                         FishBone(c, 14, 13, 230);
                         Bubble(c, 7, 21, 2.5f);
                         Bubble(c, 19, 19, 1.5f);
@@ -101,7 +101,7 @@ namespace FishHunter.EditorTools
         public static PixelCanvas[] Projectile()
         {
             var frames = new PixelCanvas[3];
-            Vector2Int[] glints = { new Vector2Int(3, 6), new Vector2Int(4, 6), new Vector2Int(3, 5) };
+            Vector2Int[] glints = { new(3, 6), new(4, 6), new(3, 5) };
             for (int f = 0; f < frames.Length; f++)
             {
                 var c = new PixelCanvas(10, 10);
@@ -109,8 +109,8 @@ namespace FishHunter.EditorTools
                 c.FillCircle(4.5f, 4.5f, r, new Color32(120, 215, 255, 255));
                 c.FillCircle(4.5f, 4.5f, r - 1.2f, new Color32(205, 245, 255, 255));
                 c.FillCircle(5f, 4f, 1f, new Color32(255, 255, 255, 255));
-                c.Set(glints[f].x, glints[f].y, White);
-                c.Set(glints[f].x - 1, glints[f].y, White);
+                c.Set(glints[f].x, glints[f].y, _white);
+                c.Set(glints[f].x - 1, glints[f].y, _white);
                 c.Outline(new Color32(20, 70, 120, 255));
                 frames[f] = c;
             }
@@ -128,13 +128,13 @@ namespace FishHunter.EditorTools
                 switch (f)
                 {
                     case 0:
-                        c.FillCircle(8, 8, 2.5f, White);
-                        c.Ring(8, 8, 3.5f, 1f, BubbleRim);
+                        c.FillCircle(8, 8, 2.5f, _white);
+                        c.Ring(8, 8, 3.5f, 1f, _bubbleRim);
                         break;
                     case 1:
-                        c.Ring(8, 8, 5f, 1f, BubbleRim);
-                        c.FillCircle(8, 8, 1.5f, White);
-                        c.Set(12, 11, White); c.Set(12, 5, White);
+                        c.Ring(8, 8, 5f, 1f, _bubbleRim);
+                        c.FillCircle(8, 8, 1.5f, _white);
+                        c.Set(12, 11, _white); c.Set(12, 5, _white);
                         break;
                     case 2:
                         c.Ring(8, 8, 6.5f, 1f, new Color32(190, 240, 255, 180));

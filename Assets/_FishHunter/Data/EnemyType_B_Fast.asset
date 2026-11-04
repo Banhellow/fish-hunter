@@ -12,29 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df5192d6e02bba4b8bf4a1e85e72fec, type: 3}
   m_Name: EnemyType_B_Fast
   m_EditorClassIdentifier: Assembly-CSharp::FishHunter.Enemies.EnemyTypeConfig
-  displayName: Type B (fast)
-  movement: 1
-  speedMin: 2.5
-  speedMax: 3.2
-  points: 25
-  spawnWeightStart: 18
-  spawnWeightEnd: 40
-  colliderRadius: 0.38
-  swimFrames:
+  DisplayName: Type B (fast)
+  Movement: 1
+  SpeedMin: 2.5
+  SpeedMax: 3.2
+  Points: 25
+  SpawnWeightStart: 18
+  SpawnWeightEnd: 40
+  ColliderRadius: 0.38
+  SwimFrames:
   - {fileID: 21300000, guid: 77413c7d0f1c3ba40b67d1c10c596fd8, type: 3}
   - {fileID: 21300000, guid: 42ef64659d2b9944d977255469600ecd, type: 3}
   - {fileID: 21300000, guid: 1902a15f9617ef64eb41a441eca954fd, type: 3}
   - {fileID: 21300000, guid: 292aa1b8eb23eaa49a8cd00cad8d93c2, type: 3}
-  swimFps: 10
-  deathFrames:
+  SwimFps: 10
+  DeathFrames:
   - {fileID: 21300000, guid: 2b35f19e331d0df48bbf75f38ccfca56, type: 3}
   - {fileID: 21300000, guid: bafaac8e1e227a44ca38f8a2d967674a, type: 3}
   - {fileID: 21300000, guid: 6357b9a0433692b44b2d2a578323d71d, type: 3}
   - {fileID: 21300000, guid: 45f37b98ecfc60741b3dd518594abffe, type: 3}
   - {fileID: 21300000, guid: d7db67e6cb7d19a48bb4654673aa602d, type: 3}
   - {fileID: 21300000, guid: 126cc08b8a97a494a9c44f463518bd2a, type: 3}
-  deathFps: 14
-  surgeAmplitude: 0.7
-  surgeFrequency: 0.8
-  wiggleAmplitude: 0.35
-  wiggleFrequency: 2.2
+  DeathFps: 14
+  SurgeAmplitude: 0.7
+  SurgeFrequency: 0.8
+  WiggleAmplitude: 0.35
+  WiggleFrequency: 2.2

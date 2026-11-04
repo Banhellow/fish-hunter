@@ -9,13 +9,13 @@ namespace FishHunter.UI.Core
     [RequireComponent(typeof(CanvasGroup))]
     public abstract class ViewBase : MonoBehaviour
     {
-        [SerializeField] private CanvasGroup canvasGroup;
+        [SerializeField] private CanvasGroup _canvasGroup;
 
         public bool IsVisible { get; private set; }
 
         protected virtual void Awake()
         {
-            if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
+            if (_canvasGroup == null) _canvasGroup = GetComponent<CanvasGroup>();
         }
 
         public void Show()
@@ -32,11 +32,11 @@ namespace FishHunter.UI.Core
 
         private void SetVisible(bool visible)
         {
-            if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
+            if (_canvasGroup == null) _canvasGroup = GetComponent<CanvasGroup>();
             IsVisible = visible;
-            canvasGroup.alpha = visible ? 1f : 0f;
-            canvasGroup.interactable = visible;
-            canvasGroup.blocksRaycasts = visible;
+            _canvasGroup.alpha = visible ? 1f : 0f;
+            _canvasGroup.interactable = visible;
+            _canvasGroup.blocksRaycasts = visible;
         }
 
         protected virtual void OnShow()

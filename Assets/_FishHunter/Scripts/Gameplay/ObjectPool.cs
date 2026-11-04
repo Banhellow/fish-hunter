@@ -14,10 +14,10 @@ namespace FishHunter.Gameplay
     {
         private readonly T _prefab;
         private readonly Transform _parent;
-        private readonly Stack<T> _inactive = new Stack<T>();
-        private readonly HashSet<T> _active = new HashSet<T>();
-        private readonly List<T> _releaseBuffer = new List<T>();
-        private readonly List<IPoolable> _callbackBuffer = new List<IPoolable>();
+        private readonly Stack<T> _inactive = new();
+        private readonly HashSet<T> _active = new();
+        private readonly List<T> _releaseBuffer = new();
+        private readonly List<IPoolable> _callbackBuffer = new();
 
         public int ActiveCount => _active.Count;
 
@@ -35,7 +35,7 @@ namespace FishHunter.Gameplay
             _active.Add(instance);
 
             instance.GetComponents(_callbackBuffer);
-            foreach (var poolable in _callbackBuffer) poolable.OnSpawned();
+            foreach (IPoolable poolable in _callbackBuffer) poolable.OnSpawned();
             return instance;
         }
 
@@ -45,7 +45,7 @@ namespace FishHunter.Gameplay
             if (!_active.Remove(typed)) return;
 
             typed.GetComponents(_callbackBuffer);
-            foreach (var poolable in _callbackBuffer) poolable.OnDespawned();
+            foreach (IPoolable poolable in _callbackBuffer) poolable.OnDespawned();
 
             typed.gameObject.SetActive(false);
             _inactive.Push(typed);
@@ -55,7 +55,7 @@ namespace FishHunter.Gameplay
         {
             _releaseBuffer.Clear();
             _releaseBuffer.AddRange(_active);
-            foreach (var instance in _releaseBuffer) Release(instance);
+            foreach (T instance in _releaseBuffer) Release(instance);
         }
     }
 }

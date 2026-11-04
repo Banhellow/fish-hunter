@@ -13,37 +13,37 @@ namespace FishHunter.Enemies
     [CreateAssetMenu(menuName = "Fish Hunter/Enemy Type", fileName = "EnemyType")]
     public sealed class EnemyTypeConfig : ScriptableObject
     {
-        public string displayName = "Type A";
-        public EnemyMovementKind movement = EnemyMovementKind.Standard;
+        public string DisplayName = "Type A";
+        public EnemyMovementKind Movement = EnemyMovementKind.Standard;
 
         [Header("Speed (world units / sec, rolled per individual)")]
-        public float speedMin = 1.5f;
-        public float speedMax = 2f;
+        public float SpeedMin = 1.5f;
+        public float SpeedMax = 2f;
 
         [Header("Reward")]
-        public int points = 10;
+        public int Points = 10;
 
         [Header("Spawn weight (lerped by difficulty progress)")]
-        public float spawnWeightStart = 1f;
-        public float spawnWeightEnd = 1f;
+        public float SpawnWeightStart = 1f;
+        public float SpawnWeightEnd = 1f;
 
         [Header("Body")]
-        public float colliderRadius = 0.5f;
+        public float ColliderRadius = 0.5f;
 
         [Header("Animation")]
-        public Sprite[] swimFrames;
-        public float swimFps = 8f;
-        public Sprite[] deathFrames;
-        public float deathFps = 14f;
+        public Sprite[] SwimFrames;
+        public float SwimFps = 8f;
+        public Sprite[] DeathFrames;
+        public float DeathFps = 14f;
 
         [Header("Strategy parameters")]
         [Tooltip("Fast: extra speed fraction during a surge.")]
-        public float surgeAmplitude = 0.7f;
+        public float SurgeAmplitude = 0.7f;
         [Tooltip("Fast: surges per second.")]
-        public float surgeFrequency = 0.8f;
+        public float SurgeFrequency = 0.8f;
         [Tooltip("Swift: lateral wiggle in world units.")]
-        public float wiggleAmplitude = 0.35f;
+        public float WiggleAmplitude = 0.35f;
         [Tooltip("Swift: wiggles per second.")]
-        public float wiggleFrequency = 2.2f;
+        public float WiggleFrequency = 2.2f;
     }
 }

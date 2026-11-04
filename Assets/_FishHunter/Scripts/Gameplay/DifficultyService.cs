@@ -7,7 +7,7 @@ namespace FishHunter.Gameplay
 {
     /// <summary>
     /// Linear difficulty ramp over play time: spawn rate, base enemy speed and the share of
-    /// faster enemy types all grow linearly until <see cref="GameConfig.rampDuration"/>.
+    /// faster enemy types all grow linearly until <see cref="GameConfig.RampDuration"/>.
     /// </summary>
     public sealed class DifficultyService : IService
     {
@@ -16,18 +16,18 @@ namespace FishHunter.Gameplay
         public float ElapsedTime { get; private set; }
 
         /// <summary>0 at session start, 1 when the ramp is complete.</summary>
-        public float Progress => _config.rampDuration <= 0f ? 1f : Mathf.Clamp01(ElapsedTime / _config.rampDuration);
+        public float Progress => _config.RampDuration <= 0f ? 1f : Mathf.Clamp01(ElapsedTime / _config.RampDuration);
 
-        public float SpawnInterval => Mathf.Lerp(_config.spawnIntervalStart, _config.spawnIntervalEnd, Progress);
+        public float SpawnInterval => Mathf.Lerp(_config.SpawnIntervalStart, _config.SpawnIntervalEnd, Progress);
 
-        public float SpeedMultiplier => Mathf.Lerp(_config.speedMultiplierStart, _config.speedMultiplierEnd, Progress);
+        public float SpeedMultiplier => Mathf.Lerp(_config.SpeedMultiplierStart, _config.SpeedMultiplierEnd, Progress);
 
         public DifficultyService(GameConfig config)
         {
             _config = config;
         }
 
-        public float GetSpawnWeight(EnemyTypeConfig type) => Mathf.Max(0f, Mathf.Lerp(type.spawnWeightStart, type.spawnWeightEnd, Progress));
+        public float GetSpawnWeight(EnemyTypeConfig type) => Mathf.Max(0f, Mathf.Lerp(type.SpawnWeightStart, type.SpawnWeightEnd, Progress));
 
         public void Tick(float deltaTime) => ElapsedTime += deltaTime;
 
