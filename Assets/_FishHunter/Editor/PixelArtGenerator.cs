@@ -29,7 +29,7 @@ namespace FishHunter.EditorTools
         private static readonly List<ImportJob> _jobs = new();
 
         [MenuItem("Fish Hunter/Generate Art", priority = 0)]
-        public static void Generate()
+        private static void Generate()
         {
             _jobs.Clear();
 

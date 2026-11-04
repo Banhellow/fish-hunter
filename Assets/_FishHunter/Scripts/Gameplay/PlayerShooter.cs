@@ -42,7 +42,7 @@ namespace FishHunter.Gameplay
             }
         }
 
-        public void Fire()
+        private void Fire()
         {
             Vector2 direction = _aim.AimDirection;
             Vector2 origin = _player.NosePosition;

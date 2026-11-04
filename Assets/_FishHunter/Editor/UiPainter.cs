@@ -69,7 +69,7 @@ namespace FishHunter.EditorTools
         }
 
         /// <summary>16x16 9-slice frame with 4px borders.</summary>
-        public static PixelCanvas Frame(Color32 outline, Color32 rimLight, Color32 rimDark, Color32 fill, Color32 topShine)
+        private static PixelCanvas Frame(Color32 outline, Color32 rimLight, Color32 rimDark, Color32 fill, Color32 topShine)
         {
             const int Size = 16;
             var c = new PixelCanvas(Size, Size);

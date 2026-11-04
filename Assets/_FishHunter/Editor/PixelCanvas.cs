@@ -18,7 +18,7 @@ namespace FishHunter.EditorTools
             _pixels = new Color32[width * height];
         }
 
-        public bool InBounds(int x, int y) => x >= 0 && y >= 0 && x < Width && y < Height;
+        private bool InBounds(int x, int y) => x >= 0 && y >= 0 && x < Width && y < Height;
 
         public Color32 Get(int x, int y) => InBounds(x, y) ? _pixels[y * Width + x] : Clear;
 
@@ -40,11 +40,6 @@ namespace FishHunter.EditorTools
         }
 
         public bool IsOpaque(int x, int y) => Get(x, y).a > 0;
-
-        public void Fill(Color32 c)
-        {
-            for (int i = 0; i < _pixels.Length; i++) _pixels[i] = c;
-        }
 
         public void FillRect(int x, int y, int w, int h, Color32 c)
         {
@@ -73,31 +68,6 @@ namespace FishHunter.EditorTools
                     float d = Mathf.Sqrt(dx * dx + dy * dy);
                     if (d <= r + 0.5f && d > inner - 0.5f) Set(x, y, c);
                 }
-        }
-
-        public void FillEllipse(float cx, float cy, float rx, float ry, Color32 c)
-        {
-            for (int y = Mathf.FloorToInt(cy - ry); y <= Mathf.CeilToInt(cy + ry); y++)
-                for (int x = Mathf.FloorToInt(cx - rx); x <= Mathf.CeilToInt(cx + rx); x++)
-                {
-                    float nx = (x - cx) / rx, ny = (y - cy) / ry;
-                    if (nx * nx + ny * ny <= 1.0f) Set(x, y, c);
-                }
-        }
-
-        public void Line(int x0, int y0, int x1, int y1, Color32 c)
-        {
-            int dx = Mathf.Abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
-            int dy = -Mathf.Abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
-            int err = dx + dy;
-            while (true)
-            {
-                Set(x0, y0, c);
-                if (x0 == x1 && y0 == y1) break;
-                int e2 = 2 * err;
-                if (e2 >= dy) { err += dy; x0 += sx; }
-                if (e2 <= dx) { err += dx; y0 += sy; }
-            }
         }
 
         /// <summary>Adds a 1px outline around every opaque pixel (4-neighbourhood, optionally diagonals).</summary>

@@ -37,10 +37,6 @@ namespace FishHunter.Core
             return false;
         }
 
-        public static bool IsRegistered<T>() where T : class, IService => _services.ContainsKey(typeof(T));
-
-        public static void Unregister<T>() where T : class, IService => _services.Remove(typeof(T));
-
         public static void Clear() => _services.Clear();
     }
 }

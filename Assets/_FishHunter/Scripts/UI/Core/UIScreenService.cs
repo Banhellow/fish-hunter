@@ -43,15 +43,13 @@ namespace FishHunter.UI.Core
             if (_flow != null) _flow.StateChanged -= ApplyState;
         }
 
-        public void Register(ViewBase view) => _views[view.GetType()] = view;
+        private void Register(ViewBase view) => _views[view.GetType()] = view;
 
-        public T Get<T>() where T : ViewBase => (T)_views[typeof(T)];
+        private T Get<T>() where T : ViewBase => (T)_views[typeof(T)];
 
-        public void Show<T>() where T : ViewBase => Get<T>().Show();
+        private void Show<T>() where T : ViewBase => Get<T>().Show();
 
-        public void Hide<T>() where T : ViewBase => Get<T>().Hide();
-
-        public void HideAll()
+        private void HideAll()
         {
             foreach (ViewBase view in _views.Values) view.Hide();
         }

@@ -46,12 +46,6 @@ namespace FishHunter.Animation
             if (IsPlaying) _target.sprite = _frames[_index];
         }
 
-        public void Stop()
-        {
-            IsPlaying = false;
-            _onComplete = null;
-        }
-
         private void Update()
         {
             if (!IsPlaying) return;

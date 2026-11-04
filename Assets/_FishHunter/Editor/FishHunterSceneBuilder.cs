@@ -40,7 +40,7 @@ namespace FishHunter.EditorTools
         private static PixelFont _font;
 
         [MenuItem("Fish Hunter/Build Scene", priority = 1)]
-        public static void Build()
+        private static void Build()
         {
             foreach (string dir in new[] { DataDir, PrefabDir, UiPrefabDir, Base + "/Scenes" }) Directory.CreateDirectory(dir);
             AssetDatabase.Refresh();

@@ -74,7 +74,7 @@ namespace FishHunter.Enemies
             }
         }
 
-        public bool TrySpawn()
+        private bool TrySpawn()
         {
             EnemyTypeConfig type = PickType();
             if (type == null) return false;

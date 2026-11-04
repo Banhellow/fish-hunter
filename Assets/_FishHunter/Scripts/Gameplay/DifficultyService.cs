@@ -32,8 +32,5 @@ namespace FishHunter.Gameplay
         public void Tick(float deltaTime) => ElapsedTime += deltaTime;
 
         public void ResetDifficulty() => ElapsedTime = 0f;
-
-        /// <summary>Debug/testing helper to jump along the ramp.</summary>
-        public void SetElapsed(float seconds) => ElapsedTime = Mathf.Max(0f, seconds);
     }
 }

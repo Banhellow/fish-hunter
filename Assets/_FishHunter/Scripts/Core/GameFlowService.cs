@@ -44,7 +44,7 @@ namespace FishHunter.Core
             SetState(GameState.Playing);
         }
 
-        public void Pause()
+        private void Pause()
         {
             if (State != GameState.Playing) return;
             Time.timeScale = 0f;
@@ -58,13 +58,13 @@ namespace FishHunter.Core
             SetState(GameState.Playing);
         }
 
-        public void TogglePause()
+        private void TogglePause()
         {
             if (State == GameState.Playing) Pause();
             else if (State == GameState.Paused) Resume();
         }
 
-        public void GameOver()
+        private void GameOver()
         {
             if (State != GameState.Playing) return;
             _score.CommitBest();
