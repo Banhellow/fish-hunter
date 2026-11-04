@@ -253,9 +253,9 @@ namespace FishHunter.EditorTools
             AddSprite(bg, PixelArtGenerator.LoadSprite("Background", "Seabed"), -100);
             var caustics = new GameObject("Caustics");
             caustics.transform.SetParent(bg.transform, false);
-            var causticsFrames = PixelArtGenerator.LoadFrames("Background", "Caustics", 6);
+            var causticsFrames = PixelArtGenerator.LoadFrames("Background", "Caustics", BackgroundPainter.CausticFrameCount);
             var causticsSr = AddSprite(caustics, causticsFrames[0], -90);
-            AddAnimator(caustics, causticsSr, causticsFrames, 5f, true, true);
+            AddAnimator(caustics, causticsSr, causticsFrames, BackgroundPainter.CausticFps, true, true);
 
             // Player
             var playerGo = new GameObject("Player");

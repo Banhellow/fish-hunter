@@ -66,9 +66,10 @@ namespace FishHunter.EditorTools
 
             // Background
             Save(BackgroundPainter.Seabed(), "Background", "Seabed", WorldPpu);
-            const int causticFrames = 6;
-            for (int f = 0; f < causticFrames; f++)
-                Save(BackgroundPainter.Caustics(f, causticFrames), "Background", $"Caustics_{f}", WorldPpu);
+            DeleteStale("Background", "Caustics_", BackgroundPainter.CausticFrameCount);
+            for (int f = 0; f < BackgroundPainter.CausticFrameCount; f++)
+                Save(BackgroundPainter.Caustics(f, BackgroundPainter.CausticFrameCount), "Background", $"Caustics_{f}",
+                    WorldPpu / BackgroundPainter.CausticBlock);
 
             // UI
             Save(UiPainter.Heart(true), "UI", "Heart_Full", UiPpu);
@@ -101,6 +102,19 @@ namespace FishHunter.EditorTools
             File.WriteAllBytes(path, texture.EncodeToPNG());
             Object.DestroyImmediate(texture);
             Jobs.Add(new ImportJob { path = path, ppu = ppu, border = border, isFont = isFont });
+        }
+
+        /// <summary>Removes numbered frames beyond the current count (e.g. after lowering a frame count).</summary>
+        private static void DeleteStale(string folder, string prefix, int keep)
+        {
+            string dir = $"{Root}/{folder}";
+            if (!Directory.Exists(dir)) return;
+            foreach (string file in Directory.GetFiles(dir, prefix + "*.png"))
+            {
+                string suffix = Path.GetFileNameWithoutExtension(file).Substring(prefix.Length);
+                if (int.TryParse(suffix, out int index) && index >= keep)
+                    AssetDatabase.DeleteAsset(file.Replace('\\', '/'));
+            }
         }
 
         private static void ConfigureImporter(ImportJob job)

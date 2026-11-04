@@ -235,23 +235,33 @@ namespace FishHunter.EditorTools
             c.Set(x - 1, y, dark); c.Set(x + 3, y, dark);
         }
 
-        /// <summary>Looping caustic light network overlay (transparent).</summary>
+        /// <summary>Frames in one caustics loop. More frames = smaller jumps between frames.</summary>
+        public const int CausticFrameCount = 60;
+        /// <summary>Playback rate; loop length = CausticFrameCount / CausticFps seconds (6 s).</summary>
+        public const float CausticFps = 10f;
+        /// <summary>Caustics are drawn in 2x2 art-pixel blocks, so they are stored at half resolution.</summary>
+        public const int CausticBlock = 2;
+
+        /// <summary>
+        /// Looping caustic light network overlay (transparent), one texel per 2x2 block.
+        /// Import at WorldPpu / CausticBlock so it covers the same area as the seabed.
+        /// </summary>
         public static PixelCanvas Caustics(int frame, int frameCount)
         {
-            var c = new PixelCanvas(Width, Height);
+            var c = new PixelCanvas(Width / CausticBlock, Height / CausticBlock);
             float t = frame / (float)frameCount * Mathf.PI * 2f;
-            for (int y = 0; y < Height; y += 2)
-            for (int x = 0; x < Width; x += 2)
+            for (int by = 0; by < c.Height; by++)
+            for (int bx = 0; bx < c.Width; bx++)
             {
+                int x = bx * CausticBlock, y = by * CausticBlock;
                 float v1 = Mathf.Sin(x * 0.045f + 1.7f * Mathf.Sin(y * 0.031f + t));
                 float v2 = Mathf.Sin(y * 0.052f + 1.3f * Mathf.Sin(x * 0.027f - t));
-                float v = v1 + v2;
-                float line = Mathf.Abs(v);
+                float line = Mathf.Abs(v1 + v2);
                 Color32 col;
                 if (line < 0.06f) col = new Color32(210, 245, 255, 70);
                 else if (line < 0.14f) col = new Color32(180, 235, 255, 34);
                 else continue;
-                c.FillRect(x, y, 2, 2, col);
+                c.Set(bx, by, col);
             }
 
             return c;
