@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df5192d6e02bba4b8bf4a1e85e72fec, type: 3}
+  m_Name: EnemyType_C_Swift
+  m_EditorClassIdentifier: Assembly-CSharp::FishHunter.Enemies.EnemyTypeConfig
+  displayName: Type C (swift)
+  movement: 2
+  speedMin: 3.9
+  speedMax: 4.8
+  points: 50
+  spawnWeightStart: 2
+  spawnWeightEnd: 25
+  colliderRadius: 0.33
+  swimFrames:
+  - {fileID: 21300000, guid: 6153429a910bb1f4a9a357f86596229b, type: 3}
+  - {fileID: 21300000, guid: e60c3b9467e3aac40979a2ea183dbb04, type: 3}
+  - {fileID: 21300000, guid: e549834196e331040a9776da862ccefc, type: 3}
+  - {fileID: 21300000, guid: 3666ed0efcbe5ce48ac70196d43f12b5, type: 3}
+  swimFps: 14
+  deathFrames:
+  - {fileID: 21300000, guid: 8241497b373e4ff45aecb50bf2fd73b7, type: 3}
+  - {fileID: 21300000, guid: 9e5d7843b5af15048bf41e36dc74ee64, type: 3}
+  - {fileID: 21300000, guid: 6a5d495c4c7d75c44811716597768305, type: 3}
+  - {fileID: 21300000, guid: 9a437c09fd1d9e24bbbe48e9ae9d34ec, type: 3}
+  - {fileID: 21300000, guid: e541620d0ec384148892abc23b789aad, type: 3}
+  - {fileID: 21300000, guid: 150465338c22621489b1f9b053890cc9, type: 3}
+  deathFps: 14
+  surgeAmplitude: 0.7
+  surgeFrequency: 0.8
+  wiggleAmplitude: 0.35
+  wiggleFrequency: 2.2

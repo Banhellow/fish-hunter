@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5baa0caedbe41d42b571628ea68da62, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: Assembly-CSharp::FishHunter.Config.GameConfig
+  startLives: 3
+  noseOffset: 0.95
+  playerIdleFrames:
+  - {fileID: 21300000, guid: 25b92b7f4c21a6e43abf1229940d56cc, type: 3}
+  - {fileID: 21300000, guid: 5d61ac4b74b1fe4468a74c5ebac82558, type: 3}
+  - {fileID: 21300000, guid: 641136eaba65d08428d4af944ea9ac3b, type: 3}
+  - {fileID: 21300000, guid: 971b33b504acb234b917cb76d77c4686, type: 3}
+  playerIdleFps: 8
+  playerShootFrames:
+  - {fileID: 21300000, guid: 5e64127bcab6eb44ebc72030746f268b, type: 3}
+  - {fileID: 21300000, guid: 234d518f9231cf144b0861956f248683, type: 3}
+  - {fileID: 21300000, guid: f3589c9a500f98447b89e4b723de558d, type: 3}
+  - {fileID: 21300000, guid: 3ef684e54a4b0064da6164738a357da7, type: 3}
+  playerShootFps: 18
+  hitFlashDuration: 0.4
+  projectileSpeed: 14
+  projectileLifetime: 3
+  fireCooldown: 0.18
+  muzzleFrames:
+  - {fileID: 21300000, guid: ed7c1892031cf9943b04492f825469e6, type: 3}
+  - {fileID: 21300000, guid: 7b41c89cd15ffc249a8a3902e62d2692, type: 3}
+  - {fileID: 21300000, guid: edc85f1c8f247534cb30345cdf8b6165, type: 3}
+  - {fileID: 21300000, guid: d60c236a54618304f9bf74ec5b982376, type: 3}
+  muzzleFps: 20
+  rampDuration: 180
+  spawnIntervalStart: 1.6
+  spawnIntervalEnd: 0.35
+  speedMultiplierStart: 1
+  speedMultiplierEnd: 1.8
+  minSpawnGap: 0.25
+  spawnIntervalJitter: 0.2
+  spawnMargin: 1.5
+  minSpawnSpacing: 1.8
+  laneAngle: 9
+  spawnAttempts: 10
